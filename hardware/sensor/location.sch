@@ -1,5 +1,4 @@
 EESchema Schematic File Version 2
-LIBS:location-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -29,7 +28,6 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:patternmatrix
 LIBS:location-cache
 EELAYER 25 0
 EELAYER END
@@ -105,7 +103,7 @@ Connection ~ 5150 2400
 Wire Wire Line
 	4800 2400 4800 2850
 Wire Wire Line
-	4900 2600 4300 2600
+	4150 2600 4900 2600
 Wire Wire Line
 	5700 2600 5500 2600
 Wire Wire Line
@@ -115,7 +113,7 @@ Wire Wire Line
 Wire Wire Line
 	4850 2800 4850 2700
 Wire Wire Line
-	4850 2700 4300 2700
+	4850 2700 4150 2700
 Wire Wire Line
 	5700 3100 5500 3100
 Wire Wire Line
@@ -125,15 +123,15 @@ Wire Wire Line
 Wire Wire Line
 	4750 2900 4750 2800
 Wire Wire Line
-	4750 2800 4300 2800
+	4750 2800 4150 2800
 Wire Wire Line
 	4900 3100 4900 2950
 Wire Wire Line
 	4900 2950 4700 2950
 Wire Wire Line
-	4700 2950 4700 2900
+	4700 2900 4700 2950
 Wire Wire Line
-	4700 2900 4300 2900
+	4150 2900 4700 2900
 $Comp
 L C-RESCUE-location C1
 U 1 1 5922FA46
@@ -146,13 +144,13 @@ F 3 "~" H 4550 2300 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	4300 2500 5000 2500
+	4150 2500 5000 2500
 Wire Wire Line
 	5000 2500 5000 2400
 Wire Wire Line
 	5000 2400 6350 2400
 Wire Wire Line
-	4300 2400 4800 2400
+	4150 2400 4800 2400
 Connection ~ 5950 2400
 Connection ~ 5950 3300
 Wire Wire Line
@@ -164,12 +162,24 @@ Connection ~ 4350 2500
 $Comp
 L CONN_01X06 J1
 U 1 1 592E8085
-P 4100 2650
-F 0 "J1" H 4100 3000 50  0000 C CNN
-F 1 "CONN_01X06" V 4200 2650 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x06_Pitch2.54mm" H 4100 2650 50  0001 C CNN
-F 3 "" H 4100 2650 50  0001 C CNN
-	1    4100 2650
+P 3950 2650
+F 0 "J1" H 3950 3000 50  0000 C CNN
+F 1 "CONN_01X06" V 4050 2650 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x06_Pitch2.54mm" H 3950 2650 50  0001 C CNN
+F 3 "" H 3950 2650 50  0001 C CNN
+	1    3950 2650
 	-1   0    0    -1  
 $EndComp
+Text Notes 4100 2400 0    60   ~ 0
+GND
+Text Notes 4100 2500 0    60   ~ 0
+VCC
+Text Notes 4100 2600 0    60   ~ 0
+S1
+Text Notes 4100 2700 0    60   ~ 0
+S2
+Text Notes 4100 2800 0    60   ~ 0
+S3
+Text Notes 4100 2900 0    60   ~ 0
+S4
 $EndSCHEMATC

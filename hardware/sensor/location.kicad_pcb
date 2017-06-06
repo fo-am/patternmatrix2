@@ -3,7 +3,7 @@
   (general
     (links 14)
     (no_connects 0)
-    (area 57.556965 72.796965 97.383035 112.623035)
+    (area 57.15 72.0598 97.790001 113.030001)
     (thickness 1.6)
     (drawings 11)
     (tracks 65)
@@ -60,7 +60,7 @@
     (grid_origin 77.47 92.71)
     (visible_elements FFFFEFBF)
     (pcbplotparams
-      (layerselection 0x00030_80000001)
+      (layerselection 0x01fff_80000001)
       (usegerberextensions true)
       (excludeedgelayer true)
       (linewidth 0.100000)
@@ -81,9 +81,9 @@
       (subtractmaskfromsilk false)
       (outputformat 1)
       (mirror false)
-      (drillshape 1)
+      (drillshape 0)
       (scaleselection 1)
-      (outputdirectory svg/sensor/))
+      (outputdirectory ../production/sensor/))
   )
 
   (net 0 "")
