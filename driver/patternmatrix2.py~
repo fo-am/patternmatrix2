@@ -1,0 +1,16 @@
+import smbus
+import time
+
+bus = smbus.SMBus(1)
+
+MCP_IODIR = 0x00
+MCP_GPIOA = 0x12
+
+bus.write_byte_data(0x21,MCP_GPIOA,0xff)
+
+def read_sensor(bus,device):
+    return bus.read_byte_data(device,GPIOA)
+
+while True:
+    print(read_sensor(bus,0x21))
+    time.sleep(1)
