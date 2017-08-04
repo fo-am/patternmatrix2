@@ -45,7 +45,13 @@ while True:
                     mcp23017.read_inputs_a(bus,address),
                     mcp23017.read_inputs_b(bus,address))
     #print()    
-    print(grid.state[4].token_current,
+    print(grid.state[1].token_current,
+          grid.state[1].value_current,
+          grid.state[2].token_current,
+          grid.state[2].value_current,
+          grid.state[3].token_current,
+          grid.state[3].value_current,
+          grid.state[4].token_current,
           grid.state[4].value_current)
     time.sleep(frequency)
 
