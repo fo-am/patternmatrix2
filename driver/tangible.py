@@ -2,6 +2,10 @@ def convert_4bit(arr):
     # clockwise from top left
     return arr[0]|arr[1]<<1|arr[3]<<2|arr[2]<<3
 
+def convert_arr(num):
+    # clockwise from top left
+    return [(num>>0)&1,(num>>1)&1,(num>>2)&1,(num>>3)&1]
+
 ## this classifier is simply a filter for biasing against readings
 ## for different tokens in favour of orientations of existing ones
 ## noise is considered to be caused primarily by 'in between' sensor
@@ -79,3 +83,18 @@ class sensor_grid:
                 self.state[i].observation(dt,convert_4bit(sensor_data[p[1]]))
 
 
+    def pprint(self,width):
+        s=""
+        row=1
+        for i,p in enumerate(self.layout):
+            data=convert_arr(self.state[i].value_current)
+            s+=str(data[0])
+            s+=str(data[1])
+            s+=str(data[2])
+            s+=str(data[3])
+            s+=" "
+            if row==width:
+                row=0
+                s+="\n"
+            row+=1
+        print(s)
