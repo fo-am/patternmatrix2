@@ -2,6 +2,17 @@ def convert_4bit(arr):
     # clockwise from top left
     return arr[0]|arr[1]<<1|arr[3]<<2|arr[2]<<3
 
+def convert_4bit_upsidedown(arr):
+    return arr[2]|arr[3]<<1|arr[1]<<2|arr[0]<<3
+
+def convert_4bit_lr(arr):
+    # clockwise from top left
+    return arr[1]|arr[0]<<1|arr[2]<<2|arr[3]<<3
+
+def convert_4bit_rl(arr):
+    # clockwise from top left
+    return arr[3]|arr[2]<<1|arr[0]<<2|arr[1]<<3
+
 def convert_arr(num):
     # clockwise from top left
     return [(num>>0)&1,(num>>1)&1,(num>>2)&1,(num>>3)&1]
@@ -61,8 +72,12 @@ class sensor_grid:
         for i in range(0,num_sensors):
             self.state.append(sensor_filter(tokens))
         self.layout = layout
+        self.sensor_orientation_dn = 0
+        self.sensor_orientation_up = 1
+        self.sensor_orientation_lr = 2
+        self.sensor_orientation_rl = 3
             
-    def update(self, dt,address,data_a,data_b):
+    def update(self,dt,address,data_a,data_b):
         # i2c 20,21,22,23,24,25,26
 
         # sensor pin out:
@@ -76,13 +91,35 @@ class sensor_grid:
             off = i*2
             sensor_data.append([data_b[off],data_a[off+1],
                                 data_a[off],data_b[off+1]])
+
+
             
         # search layout and update filters
         for i,p in enumerate(self.layout):
             if p[0]==address:
-                self.state[i].observation(dt,convert_4bit(sensor_data[p[1]]))
+                if p[2]==self.sensor_orientation_dn:
+                    self.state[i].observation(dt,convert_4bit(sensor_data[p[1]]))
+                if p[2]==self.sensor_orientation_up:
+                    self.state[i].observation(dt,convert_4bit_upsidedown(sensor_data[p[1]]))
+                if p[2]==self.sensor_orientation_lr:
+                    self.state[i].observation(dt,convert_4bit_lr(sensor_data[p[1]]))
+                if p[2]==self.sensor_orientation_rl:
+                    self.state[i].observation(dt,convert_4bit_rl(sensor_data[p[1]]))
+                    
 
-
+    def data(self,width):
+        d=[]
+        r=[]
+        row=1
+        for i,p in enumerate(self.layout):
+            r.append(self.state[i].value_current)
+            if row==width:
+                d.append(r)
+                row=0
+                r=[]
+            row+=1
+        return d
+            
     def pprint(self,width):
         s=""
         row=1
