@@ -15,10 +15,10 @@ lr = 2
 rl = 3
 
 layout = [[0x25,0,lr], [0x24,0,lr], [0x24,1,lr], [0x24,2,lr], [0x24,3,lr],
-          [0x23,0,dn], [0x23,1,dn], [0x23,2,dn], [0x23,3,dn], [0x26,3,dn],
-          [0x22,3,up], [0x22,2,up], [0x22,1,up], [0x22,0,up], [0x26,2,rl],
-          [0x21,0,dn], [0x21,1,dn], [0x21,2,dn], [0x21,3,dn], [0x26,1,rl],
-          [0x20,3,up], [0x20,2,up], [0x20,1,up], [0x20,0,up], [0x26,0,rl] ]
+          [0x23,0,dn], [0x23,1,dn], [0x23,2,dn], [0x23,3,dn], [0x26,0,dn],
+          [0x22,3,up], [0x22,2,up], [0x22,1,up], [0x22,0,up], [0x26,1,rl],
+          [0x21,0,dn], [0x21,1,dn], [0x21,2,dn], [0x21,3,dn], [0x26,2,rl],
+          [0x20,3,up], [0x20,2,up], [0x20,1,up], [0x20,0,up], [0x26,3,rl] ]
           
 tokens = {"circle":    [[0,0,0,0],[1,1,1,1]],
 
@@ -107,7 +107,7 @@ while True:
         if grp==11: send_grp(5)
         if grp==13: send_grp(6)
         if grp==14: send_grp(7)
-        
+    #grid.pprint(5)
     time.sleep(frequency)
 
 
