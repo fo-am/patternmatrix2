@@ -1,5 +1,5 @@
 ; lz/nz
-(synth-init "fluxa" 4 44100 2048 30)
+(synth-init "fluxa" 2 44100 2048 30)
 
 (define (make-lz md d stk w h mem)
   (vector md d stk w h mem))
@@ -93,8 +93,7 @@
 	  ;;(msg pos pat data (lz-stk lz))
 	  (cond
 	   ;; space is the end of a rule, so now pop or reset (also check bound)
-	   ((or (char=? data #\ ))
-	    (lz-return lz))
+	   ;;((or (char=? data #\ )) (lz-return lz))
 	   ;; step to the next for return, then push new rule position
 	   ((char=? data #\A) (lz-inc-pos lz) (lz-push! lz (list 0 0)) (lz-step lz))
 	   ((char=? data #\B) (lz-inc-pos lz) (lz-push! lz (list 0 1)) (lz-step lz))
@@ -690,8 +689,8 @@
 
 (nz-dump z 1000)
 
-(set-nz-grp! z 7)
-(set-nz-vx! z 0)
+;(set-nz-grp! z 7)
+;(set-nz-vx! z 0)
 (set-nz-bar-reset! z #f)
 
 (every-frame (nz-tick z))

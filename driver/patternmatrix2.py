@@ -75,6 +75,7 @@ def send_pattern(pat):
 
 
 def send_grp(grp):
+    osc.Message("/eval",["(set-nz-vx! z 0)"]).sendlocal(8000)
     osc.Message("/eval",["(set-nz-grp! z "+str(grp)+")"]).sendlocal(8000)
 
 send_grp(4)    
