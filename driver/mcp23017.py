@@ -15,7 +15,7 @@ def read_sensor(bus,device,gpio,sensor):
                 (d>>2+sensor)&1,
                 (d>>3+sensor)&1]
     except:
-        print("IO problem")
+        print("IO problem "+format(device,"02x"))
         return [0,0,0,0]
 
 def read_inputs_a(bus,device):
@@ -30,7 +30,7 @@ def read_inputs_a(bus,device):
                 (d>>1)&1,
                 (d)&1]
     except:
-        print("IO problem")
+        print("IO problem "+format(device,"02x"))
         return [0,0,0,0,0,0,0,0]
 
 def read_inputs_b(bus,device):
@@ -45,7 +45,7 @@ def read_inputs_b(bus,device):
                 (d>>6)&1,
                 (d>>7)&1]
     except:
-        print("IO problem")
+        print("IO problem "+format(device,"02x"))
         return [0,0,0,0,0,0,0,0]
 
 def init_mcp(bus,mcp):
@@ -55,7 +55,7 @@ def init_mcp(bus,mcp):
         bus.write_byte_data(mcp,MCP_GPPUA,0xff)
         bus.write_byte_data(mcp,MCP_GPPUB,0xff)
     except:
-        print("IO problem")
+        print("IO problem "+format(mcp,"02x"))
 
 def print_raw(bus,mcp):
     print(read_sensor(bus,mcp,MCP_GPIOA,0))

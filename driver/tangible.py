@@ -17,6 +17,13 @@ def convert_arr(num):
     # clockwise from top left
     return [(num>>0)&1,(num>>1)&1,(num>>2)&1,(num>>3)&1]
 
+
+# 
+def convert_4bit_twist(arr):
+    # clockwise from top left
+    return arr[0]|arr[1]<<1|arr[2]<<2|arr[3]<<3
+
+
 ## this classifier is simply a filter for biasing against readings
 ## for different tokens in favour of orientations of existing ones
 ## noise is considered to be caused primarily by 'in between' sensor
@@ -53,17 +60,19 @@ class sensor_filter:
             if self.token_current in self.tokens and \
                value in self.tokens[self.token_current]:
                 # permutation of the current token is more likely
-                self.confidence_time += self.token_orient_time
+                self.confidence_time = self.token_orient_time
             else:
                 # than a new token (could be rotation noise etc)
-                self.confidence_time += self.token_change_time
+                self.confidence_time = self.token_change_time
             
         if self.confidence_time==0:
             self.token_current=self.token_theory
             self.value_current=self.value_theory
-            self.confidence_time=0
+            self.confidence_time=-1
+            print(self.token_current+" "+str(convert_arr(self.value_current))+" "+str(self.value_current))
         else:
-            self.confidence_time=max(0,self.confidence_time-dt)
+            if self.confidence_time>0:
+                self.confidence_time=max(0,self.confidence_time-dt)
 
 
 class sensor_grid:
