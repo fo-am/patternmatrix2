@@ -56,7 +56,7 @@ def init_mcp(bus,mcp):
         bus.write_byte_data(mcp,MCP_GPPUB,0xff)
     except:
         print("IO problem "+format(mcp,"02x"))
-
+        
 def print_raw(bus,mcp):
     print(read_sensor(bus,mcp,MCP_GPIOA,0))
     print(read_sensor(bus,mcp,MCP_GPIOA,4))

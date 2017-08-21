@@ -3,10 +3,13 @@ import time
 import mcp23017
 import tangible
 import osc
+import sev_seg
 
 bus = smbus.SMBus(1)
 
 mcp = [0x20,0x21,0x22,0x23,0x24,0x25,0x26]
+
+debug_mcp = 0x25
 
 # sensor orientation
 dn = 0
@@ -46,7 +49,10 @@ tokens = {"circle":    [[0,0,0,0],[1,1,1,1]],
                         [1,1,1,0],[1,1,0,1],[1,0,1,1],[0,1,1,1]]}
 
 for address in mcp:
-    mcp23017.init_mcp(bus,address)
+    if address==debug_mcp:
+        sev_seg.init(bus,address)
+    else:
+        mcp23017.init_mcp(bus,address)
 
 grid = tangible.sensor_grid(25,layout,tokens)
 
@@ -84,6 +90,18 @@ def send_grp(grp):
     osc.Message("/eval",["(set-nz-vx! z 0)"]).sendlocal(8000)
     osc.Message("/eval",["(set-nz-grp! z "+str(grp)+")"]).sendlocal(8000)
 
+    
+flip = 1
+
+def update_debug(pat):
+    #print(pat)
+    global flip
+    if flip==1: flip=0
+    else: flip=1
+
+    sev_seg.write(bus,debug_mcp,[pat[0],pat[1],0,0,0,pat[3],pat[2],flip])
+
+    
 send_grp(4)    
 osc.Message("/eval",["(set-scale pentatonic-minor)"]).sendlocal(8000)
 
@@ -91,7 +109,6 @@ osc.Message("/eval",["(set-scale pentatonic-minor)"]).sendlocal(8000)
 
 last=""
 last_grp=0
-
 while True:
     for address in mcp:
         grid.update(frequency,address,
@@ -116,6 +133,9 @@ while True:
         if grp==14: send_grp(7)
     #grid.pprint(5)
     time.sleep(frequency)
+
+    update_debug(grid.last_debug)
+
 
 
 

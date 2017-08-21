@@ -70,10 +70,11 @@ class sensor_filter:
             self.value_current=self.value_theory
             self.confidence_time=-1
             print(self.token_current+" "+str(convert_arr(self.value_current))+" "+str(self.value_current))
+            return convert_arr(self.value_current)
         else:
             if self.confidence_time>0:
                 self.confidence_time=max(0,self.confidence_time-dt)
-
+        return False
 
 class sensor_grid:
     def __init__(self, num_sensors, layout, tokens):
@@ -85,7 +86,8 @@ class sensor_grid:
         self.sensor_orientation_up = 1
         self.sensor_orientation_lr = 2
         self.sensor_orientation_rl = 3
-            
+        self.last_debug=[0,0,0,0]
+        
     def update(self,dt,address,data_a,data_b):
         # i2c 20,21,22,23,24,25,26
 
@@ -106,15 +108,17 @@ class sensor_grid:
         # search layout and update filters
         for i,p in enumerate(self.layout):
             if p[0]==address:
+                converted = 0
                 if p[2]==self.sensor_orientation_dn:
-                    self.state[i].observation(dt,convert_4bit(sensor_data[p[1]]))
+                    converted=convert_4bit(sensor_data[p[1]])
                 if p[2]==self.sensor_orientation_up:
-                    self.state[i].observation(dt,convert_4bit_upsidedown(sensor_data[p[1]]))
+                    converted=convert_4bit_upsidedown(sensor_data[p[1]])
                 if p[2]==self.sensor_orientation_lr:
-                    self.state[i].observation(dt,convert_4bit_lr(sensor_data[p[1]]))
+                    converted=convert_4bit_lr(sensor_data[p[1]])
                 if p[2]==self.sensor_orientation_rl:
-                    self.state[i].observation(dt,convert_4bit_rl(sensor_data[p[1]]))
-                    
+                    converted=convert_4bit_rl(sensor_data[p[1]])
+                r = self.state[i].observation(dt,converted)
+                if r: self.last_debug=r
 
     def data(self,width):
         d=[]
