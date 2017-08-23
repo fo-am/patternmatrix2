@@ -1,5 +1,5 @@
 ; lz/nz
-(synth-init "fluxa" 2 44100 2048 30)
+(synth-init "fluxa" 2 44100 2048 20)
 
 (define (make-lz md d stk w h mem)
   (vector md d stk w h mem))
@@ -179,7 +179,7 @@
 (define (set-nz-bar-reset! n v) (vector-set! n 9 v))
 
 (define (build-nz lz sz tk)
-  (make-nz lz '(20) 0 sz (ntp-time) tk (* tk 4) 0 (ntp-time) #f))
+  (make-nz lz '(20) 0 sz (ntp-time) tk (* tk 4) 0 (ntp-time) 0))
 
 (define (nz-pop! nz)
   (let ((tmp (car (nz-vals nz))))
@@ -223,11 +223,12 @@
 
 (define (nz-tick nz)
   (let ((now (ntp-time)))
-    (let ((future (ntp-time-add now (nz-barlen nz))))
+    (let ((future (ntp-time-add now (* (nz-tk nz) 4))))
       (when (ntp>? future (nz-bar-t nz))
-	    (when (nz-bar-reset nz)
+	    (when (not (zero? (nz-bar-reset nz)))
 		  (set-lz-d! l 0)
 		  (set-lz-stk! l '((0 0)))
+		  (set-nz-vx! nz 0)
 		  (set-nz-vals! z '(20)))
 	    (set-nz-bar-t! nz (ntp-time-add (nz-bar-t nz) (nz-barlen nz))))
 	    
@@ -411,11 +412,11 @@
     (list ;; hiq plucked vocal  v
      (lambda (v d) (echo (mul (adsr 0 0.01 0 0) (white 12)) 
 			 (* (modulo v 5) 0.25 d) 0.9))
-     (lambda (v d) (formant (mul (adsr 0 d 0 0) 
+     (lambda (v d) (formant (mul (adsr 0 d 0 0)  
 				 (add (tri 120) (tri 422.3))) 
 			    (* (modulo v 10) 0.1) 0))
      (lambda (v d) (mul (adsr 0 d 0.5 0.4) (ks (note (/ v 4)) (+ 0.9 (* (modulo v 5) 0.002)) 0.1)))
-     (lambda (v d) (formant (mul (adsr 0 d 0.2 1) 
+     (lambda (v d) (formant (mul (adsr 0 d 0.2 1)  
 				 (add (tri 12) (tri 42.3))) 
 			    (* (modulo v 15) 0.1) 0)))
 
@@ -431,7 +432,7 @@
 			       (note v)))))
      (lambda (v d) (mul (adsr 0 0.01 0.1 1) (sine (add (mul 20 (sine 40)) (note v)))))
      (lambda (v d) (mul (adsr 0 0.01 1 0.1) (crush (pink 40) 3 (* (+ (modulo v 12) 1) 0.02))))
-     (lambda (v d) (mul (adsr 0 0.01 1 2) (pad (note v) (* (modulo v 5) 0.02) 0.5 0.6))))
+     (lambda (v d) (mul (adsr 0 0.01 1 2) (pad (/ (note v) 8) (* (modulo v 5) 0.02) 0.5 0.6))))
  
 
     (list ;; gamey dubstep
@@ -643,36 +644,38 @@
 ;; (lz-prog l 2 "ca+D-")
 ;; (lz-prog l 3 "+AaA-")
 
-(lz-prog l 0 "C+Aaa")
-(lz-prog l 1 "cC>dD")
-(lz-prog l 2 "++cBd")
-(lz-prog l 3 "b+bC-")
+(lz-prog l 0 "abbb ")
+(lz-prog l 1 ".....")
+(lz-prog l 2 ".....")
+(lz-prog l 3 ".....")
 
 ;;(define z (build-nz (vector 9 5 '((4 2) (4 1) (6 0) (3 2) (4 1) (6 0)) 8 3 (list->vector (string->list "BaaadBdcd--C+++ --Aba+dd        "))) ss 0.2))
 (define z (build-nz l ss 0.2))
 
-(define (sync seconds fraction bpb bpm)
-  (let ((new-tk (bpm->seconds bpm))
-	(now (list seconds fraction)))
-    ;;(msg (car now) " " (cadr now) " sync")
-    (set-nz-barlen! z (* new-tk bpb))
-    (set-nz-tk! z new-tk)
-
-    ;; schedule next bar sync
-    (let ((barsync (ntp-time-add 
-		    (nz-bar-t z) 
-		    (- (calc-offset now (nz-bar-t z) (nz-barlen z)))
-		    )))
-      ;;(msg (car sync) " " (cadr sync) " setting")
-      (set-nz-bar-t! z barsync))
-    
-    ;; tweak the next tick to be in sync
-    (let ((sync (ntp-time-add 
-		 (nz-cur-t z) 
-		 (dbg (- (calc-offset now (nz-cur-t z) new-tk)))
-		 )))
-      ;;(msg (car sync) " " (cadr sync) " setting")
-      (set-nz-cur-t! z sync))))
+(define (sync seconds fraction beat bpm)
+  (let ((bpb (if (zero? (nz-bar-reset z)) 4 (nz-bar-reset z))))
+    (when (zero? (modulo beat bpb))
+	  (let ((new-tk (bpm->seconds bpm))
+		(now (list seconds fraction)))
+	    ;;(msg (car now) " " (cadr now) " sync")
+	    (set-nz-barlen! z (* new-tk bpb))
+	    (set-nz-tk! z new-tk)
+	    
+	    ;; schedule next bar sync
+	    (let ((barsync (ntp-time-add 
+			    (nz-bar-t z) 
+			    (- (calc-offset now (nz-bar-t z) (nz-barlen z)))
+			    )))
+	      ;;(msg (car sync) " " (cadr sync) " setting")
+	      (set-nz-bar-t! z barsync))
+	    
+	    ;; tweak the next tick to be in sync
+	    (let ((sync (ntp-time-add 
+			 (nz-cur-t z) 
+			 (dbg (- (calc-offset now (nz-cur-t z) new-tk)))
+			 )))
+	      ;;(msg (car sync) " " (cadr sync) " setting")
+	      (set-nz-cur-t! z sync))))))
 
 
 
@@ -683,15 +686,15 @@
 ;; bar sync lock
 ;; more bass
 
-;;(set-scale pentatonic-minor)
-(set-scale harmonic-minor)
+(set-scale pentatonic-minor)
+;;(set-scale harmonic-minor)
 ;;(set-scale '(1 1 1 1 1 1 1 1 1 1 1 1))
 
 (nz-dump z 1000)
 
 ;(set-nz-grp! z 7)
 ;(set-nz-vx! z 0)
-(set-nz-bar-reset! z #f)
+;(set-nz-bar-reset! z 6)
 
 (every-frame (nz-tick z))
 

@@ -6,6 +6,8 @@ MCP_GPPUA = 0x0c
 MCP_GPPUB = 0x0d
 MCP_GPIOA = 0x12
 MCP_GPIOB = 0x13
+MCP_OLATA = 0x14
+MCP_OLATB = 0x15
 
 def read_sensor(bus,device,gpio,sensor):
     try:

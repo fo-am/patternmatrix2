@@ -90,6 +90,9 @@ def send_grp(grp):
     osc.Message("/eval",["(set-nz-vx! z 0)"]).sendlocal(8000)
     osc.Message("/eval",["(set-nz-grp! z "+str(grp)+")"]).sendlocal(8000)
 
+def send_bar(bar):
+    print("bar: "+str(bar))
+    osc.Message("/eval",["(set-nz-bar-reset! z "+str(bar)+")"]).sendlocal(8000)
     
 flip = 1
 
@@ -102,13 +105,14 @@ def update_debug(pat):
     sev_seg.write(bus,debug_mcp,[pat[0],pat[1],0,0,0,pat[3],pat[2],flip])
 
     
-send_grp(4)    
 osc.Message("/eval",["(set-scale pentatonic-minor)"]).sendlocal(8000)
 
 #######################################################
 
 last=""
 last_grp=0
+last_bar=0
+
 while True:
     for address in mcp:
         grid.update(frequency,address,
@@ -131,7 +135,20 @@ while True:
         if grp==11: send_grp(5)
         if grp==13: send_grp(6)
         if grp==14: send_grp(7)
-    #grid.pprint(5)
+
+    bar=grid.state[21].value_current
+    if bar!=last_bar:
+        last_bar=bar
+        if bar==1: send_bar(0)
+        if bar==2: send_bar(4)
+        if bar==4: send_bar(8)
+        if bar==8: send_bar(6)
+        if bar==7: send_bar(12)
+        if bar==11: send_bar(16)
+        if bar==13: send_bar(24)
+        if bar==14: send_bar(32)
+
+        #grid.pprint(5)
     time.sleep(frequency)
 
     update_debug(grid.last_debug)
