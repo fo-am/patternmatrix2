@@ -93,7 +93,11 @@ def send_grp(grp):
 def send_bar(bar):
     print("bar: "+str(bar))
     osc.Message("/eval",["(set-nz-bar-reset! z "+str(bar)+")"]).sendlocal(8000)
-    
+
+def send_sch(sch):
+    print("sch: "+sch)
+    osc.Message("/eval",["(set-scale "+sch+")"]).sendlocal(8000)
+
 flip = 1
 
 def update_debug(pat):
@@ -112,6 +116,7 @@ osc.Message("/eval",["(set-scale pentatonic-minor)"]).sendlocal(8000)
 last=""
 last_grp=0
 last_bar=0
+last_sch=0
 
 while True:
     for address in mcp:
@@ -147,6 +152,18 @@ while True:
         if bar==11: send_bar(16)
         if bar==13: send_bar(24)
         if bar==14: send_bar(32)
+
+    sch=grid.state[22].value_current
+    if sch!=last_sch:
+        last_sch=sch
+        if sch==1: send_sch("major")
+        if sch==2: send_sch("harmonic-minor")
+        if sch==4: send_sch("pentatonic-major")
+        if sch==8: send_sch("pentatonic-minor")
+        if sch==7: send_sch("aeolian")
+        if sch==11: send_sch("ethiopian")
+        if sch==13: send_sch("hindu")
+        if sch==14: send_sch("persian")
 
         #grid.pprint(5)
     time.sleep(frequency)
