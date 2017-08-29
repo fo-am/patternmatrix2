@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+jellyfish -nw lz.scm >> jellylog.txt 2>&1

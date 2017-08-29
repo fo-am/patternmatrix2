@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-python patternmatrix2.py &
-jellyfish -nw lz.scm
+python patternmatrix2.py

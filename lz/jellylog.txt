@@ -1,0 +1,243 @@
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.front.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM front
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround21
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround21
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround40.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround40
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround41
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround50
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround51
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround71.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround71
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.iec958.0:CARD=0,AES0=4,AES1=130,AES2=0,AES3=2'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM iec958
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.iec958.0:CARD=0,AES0=4,AES1=130,AES2=0,AES3=2'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM spdif
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.iec958.0:CARD=0,AES0=4,AES1=130,AES2=0,AES3=2'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM spdif
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.hdmi
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.hdmi
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.phoneline
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.phoneline
+ALSA lib pulse.c:243:(pulse_connect) PulseAudio: Unable to connect: Connection refused
+
+ALSA lib pulse.c:243:(pulse_connect) PulseAudio: Unable to connect: Connection refused
+
+connect(2) call to /tmp/jack-1000/default/jack_0 failed (err=No such file or directory)
+attempt to connect to server failed
+Connecting to USB Device 0x41e:0x30d3: Audio (hw:1,0) for output
+connected to portaudio...
+writing waves
+written waves
+testing lz 
+lz test 2 fail 
+lz test 3 fail 
+lz test 4 fail 
+lz test 5 fail 
+lz test 6 fail 
+lz test 5 fail 
+lz test 6 fail 
+lz test 7 fail 
+lz test 8 fail 
+lz test 9 fail 
+lz test 7 fail 
+lz test 8 fail 
+lz test 9 fail 
+abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb starting osc, listening to port 8000
+event arrived too late ignoring: 0.492075
+event arrived too late ignoring: 0.294631
+event arrived too late ignoring: 0.107971
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.front.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM front
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround21
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround21
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround40.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround40
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround41
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround50
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround51
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround71.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround71
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.iec958.0:CARD=0,AES0=4,AES1=130,AES2=0,AES3=2'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM iec958
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.iec958.0:CARD=0,AES0=4,AES1=130,AES2=0,AES3=2'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM spdif
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.iec958.0:CARD=0,AES0=4,AES1=130,AES2=0,AES3=2'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM spdif
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.hdmi
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.hdmi
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.phoneline
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.phoneline
+ALSA lib pulse.c:243:(pulse_connect) PulseAudio: Unable to connect: Connection refused
+
+ALSA lib pulse.c:243:(pulse_connect) PulseAudio: Unable to connect: Connection refused
+
+connect(2) call to /tmp/jack-1000/default/jack_0 failed (err=No such file or directory)
+attempt to connect to server failed
+Connecting to USB Device 0x41e:0x30d3: Audio (hw:1,0) for output
+connected to portaudio...
+writing waves
+written waves
+testing lz 
+lz test 2 fail 
+lz test 3 fail 
+lz test 4 fail 
+lz test 5 fail 
+lz test 6 fail 
+lz test 5 fail 
+lz test 6 fail 
+lz test 7 fail 
+lz test 8 fail 
+lz test 9 fail 
+lz test 7 fail 
+lz test 8 fail 
+lz test 9 fail 
+abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb starting osc, listening to port 8000
+event arrived too late ignoring: 0.447137
+event arrived too late ignoring: 0.336018
+event arrived too late ignoring: 0.10296
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.front.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM front
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround21
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround21
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround40.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround40
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround41
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround50
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround51.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround51
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.surround71.0:CARD=0'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM surround71
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.iec958.0:CARD=0,AES0=4,AES1=130,AES2=0,AES3=2'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM iec958
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.iec958.0:CARD=0,AES0=4,AES1=130,AES2=0,AES3=2'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM spdif
+ALSA lib confmisc.c:1286:(snd_func_refer) Unable to find definition 'cards.bcm2835.pcm.iec958.0:CARD=0,AES0=4,AES1=130,AES2=0,AES3=2'
+ALSA lib conf.c:4259:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4738:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM spdif
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.hdmi
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.hdmi
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.phoneline
+ALSA lib pcm.c:2239:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.phoneline
+ALSA lib pulse.c:243:(pulse_connect) PulseAudio: Unable to connect: Connection refused
+
+ALSA lib pulse.c:243:(pulse_connect) PulseAudio: Unable to connect: Connection refused
+
+connect(2) call to /tmp/jack-1000/default/jack_0 failed (err=No such file or directory)
+attempt to connect to server failed
+Connecting to USB Device 0x41e:0x30d3: Audio (hw:1,0) for output
+connected to portaudio...
+writing waves
+written waves
+testing lz 
+lz test 2 fail 
+lz test 3 fail 
+lz test 4 fail 
+lz test 5 fail 
+lz test 6 fail 
+lz test 5 fail 
+lz test 6 fail 
+lz test 7 fail 
+lz test 8 fail 
+lz test 9 fail 
+lz test 7 fail 
+lz test 8 fail 
+lz test 9 fail 
+abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb abbb starting osc, listening to port 8000
+event arrived too late ignoring: 0.450455
+event arrived too late ignoring: 0.27151
+event arrived too late ignoring: 0.131222
