@@ -1,4 +1,4 @@
-; lz/nz
+;;;;; lz/nz
 (synth-init "fluxa" 2 44100 2048 20)
 
 (define (make-lz md d stk w h mem)
@@ -155,8 +155,8 @@
 
 (define max-vals 16)
 
-(define (make-nz lz vals vx sz cur-t tk barlen grp bar-t bar-reset)
-  (vector lz vals vx sz cur-t tk barlen grp bar-t bar-reset))
+(define (make-nz lz vals vx sz cur-t tk barlen grp bar-t bar-reset bpm-mult)
+  (vector lz vals vx sz cur-t tk barlen grp bar-t bar-reset bpm-mult))
 
 (define (nz-lz n) (vector-ref n 0))
 (define (nz-vals n) (vector-ref n 1))
@@ -168,6 +168,7 @@
 (define (nz-grp n) (vector-ref n 7))
 (define (nz-bar-t n) (vector-ref n 8))
 (define (nz-bar-reset n) (vector-ref n 9))
+(define (nz-bpm-mult n) (vector-ref n 10))
 
 (define (set-nz-vals! n v) (vector-set! n 1 v))
 (define (set-nz-vx! n v) (vector-set! n 2 v))
@@ -177,9 +178,10 @@
 (define (set-nz-grp! n v) (vector-set! n 7 v))
 (define (set-nz-bar-t! n v) (vector-set! n 8 v))
 (define (set-nz-bar-reset! n v) (vector-set! n 9 v))
+(define (set-nz-bpm-mult! n v) (vector-set! n 10 v))
 
 (define (build-nz lz sz tk)
-  (make-nz lz '(20) 0 sz (ntp-time) tk (* tk 4) 0 (ntp-time) 0))
+  (make-nz lz '(20) 0 sz (ntp-time) tk (* tk 4) 0 (ntp-time) 0 1))
 
 (define (nz-pop! nz)
   (let ((tmp (car (nz-vals nz))))
@@ -223,7 +225,7 @@
 
 (define (nz-tick nz)
   (let ((now (ntp-time)))
-    (let ((future (ntp-time-add now (* (nz-tk nz) 4))))
+    (let ((future (ntp-time-add now (* (nz-tk nz) (nz-bpm-mult nz) 4))))
       (when (ntp>? future (nz-bar-t nz))
 	    (when (not (zero? (nz-bar-reset nz)))
 		  (set-lz-d! l 0)
@@ -233,10 +235,9 @@
 	    (set-nz-bar-t! nz (ntp-time-add (nz-bar-t nz) (nz-barlen nz))))
 	    
       (when (ntp>? future (nz-cur-t nz))
-	    (msg "step..")
 	    ;;(msg nz)
 	    ;;(msg (car (nz-cur-t nz)) " " (cadr (nz-cur-t nz)) " tick-time")
-	    (msg (car now) " " (cadr now) " tick-real")
+	    ;;(msg (car now) " " (cadr now) " tick-real")
 	    ;;(msg (car future) " " (cadr future) " tick-future")
 	    (let ((t (lz-tick (nz-lz nz)))
 		  (v (car (nz-vals nz))))
@@ -245,16 +246,16 @@
 	       ((char=? t #\-) (set-nz-vals! nz (cons (modulo (- (car (nz-vals nz)) 1) 100) (cdr (nz-vals nz)))))
 	       ((char=? t #\<) (set-nz-vx! nz (modulo (- (nz-vx nz) 1) (length (nz-sz nz)))))
 	       ((char=? t #\>) (set-nz-vx! nz (modulo (+ (nz-vx nz) 1) (length (nz-sz nz)))))
-	       ((char=? t #\a) (play (nz-cur-t nz) (nz-sound nz 0 v (nz-tk nz)) 0.2))
-	       ((char=? t #\b) (play (nz-cur-t nz) (nz-sound nz 1 v (nz-tk nz)) -0.2))
-	       ((char=? t #\c) (play (nz-cur-t nz) (nz-sound nz 2 v (nz-tk nz)) 0.7))
-	       ((char=? t #\d) (play (nz-cur-t nz) (nz-sound nz 3 v (nz-tk nz)) -0.7))
+	       ((char=? t #\a) (play (nz-cur-t nz) (nz-sound nz 0 v (* (nz-tk nz) (nz-bpm-mult nz))) 0.2))
+	       ((char=? t #\b) (play (nz-cur-t nz) (nz-sound nz 1 v (* (nz-tk nz) (nz-bpm-mult nz))) -0.2))
+	       ((char=? t #\c) (play (nz-cur-t nz) (nz-sound nz 2 v (* (nz-tk nz) (nz-bpm-mult nz))) 0.7))
+	       ((char=? t #\d) (play (nz-cur-t nz) (nz-sound nz 3 v (* (nz-tk nz) (nz-bpm-mult nz))) -0.7))
 	       ((char=? t #\[) (nz-dup! nz))
 	       ((char=? t #\]) (nz-pop! nz)))
 	      (when (or (char=? t #\a) (char=? t #\b)
 	                (char=? t #\c) (char=? t #\d)
 	                (char=? t #\.))
-		    (set-nz-cur-t! nz (ntp-time-add (nz-cur-t nz) (nz-tk nz))))
+		    (set-nz-cur-t! nz (ntp-time-add (nz-cur-t nz) (* (nz-tk nz) (nz-bpm-mult nz)))))
 	      )))))
 
 ; --

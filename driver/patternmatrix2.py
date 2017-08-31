@@ -98,6 +98,10 @@ def send_sch(sch):
     print("sch: "+sch)
     osc.Message("/eval",["(set-scale "+sch+")"]).sendlocal(8000)
 
+def send_mul(mul):
+    print("mul: "+str(mul))
+    osc.Message("/eval",["(set-nz-bpm-mult! z "+str(mul)+")"]).sendlocal(8000)
+
 flip = 1
 
 def update_debug(pat):
@@ -117,6 +121,7 @@ last=""
 last_grp=0
 last_bar=0
 last_sch=0
+last_mul=0
 
 while True:
     for address in mcp:
@@ -165,6 +170,18 @@ while True:
         if sch==13: send_sch("hindu")
         if sch==14: send_sch("persian")
 
+    mul=grid.state[23].value_current
+    if mul!=last_mul:
+        last_mul=mul
+        if mul==1: send_mul(1)
+        if mul==2: send_mul(2)
+        if mul==4: send_mul(3)
+        if mul==8: send_mul(4)
+        if mul==7: send_mul(0.5)
+        if mul==11: send_mul(0.25)
+        if mul==13: send_mul(0.125)
+        if mul==14: send_mul(1)
+        
         #grid.pprint(5)
     time.sleep(frequency)
 
