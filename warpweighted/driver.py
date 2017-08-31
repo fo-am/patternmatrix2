@@ -113,7 +113,7 @@ while True:
     cc = pat[0]+pat[1]+pat[2]+pat[3]+pat[4]
     if cc!=last:
         last=cc    
-        print(cc)
+        print("   "+pat[0]+"   "+pat[1]+"   "+pat[2]+"   "+pat[3]+"   "+pat[4])
         send_pattern(cc)
 
     col=grid.state[24].value_current

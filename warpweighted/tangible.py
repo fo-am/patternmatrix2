@@ -69,7 +69,7 @@ class sensor_filter:
             self.token_current=self.token_theory
             self.value_current=self.value_theory
             self.confidence_time=-1
-            print(self.token_current+" "+str(convert_arr(self.value_current))+" "+str(self.value_current))
+            #print(self.token_current+" "+str(convert_arr(self.value_current))+" "+str(self.value_current))
             return convert_arr(self.value_current)
         else:
             if self.confidence_time>0:

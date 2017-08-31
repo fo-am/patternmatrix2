@@ -213,7 +213,7 @@
      (loom-wefts loom))
     (addr-set! (loom-warp loom) addr-warp-draft-size 4)
 
-    (msg "4x4")
+    ;;(msg "4x4")
     (set-draft-all!
      loom
      (list (list-ref data 0) (list-ref data 1) (list-ref data 2) (list-ref data 3)
@@ -221,7 +221,7 @@
            (list-ref data 10) (list-ref data 11) (list-ref data 12) (list-ref data 13)
            (list-ref data 15) (list-ref data 16) (list-ref data 17) (list-ref data 18))))
    (else
-    (msg "5x5")
+    ;;(msg "5x5")
     ;; draft size 5x5
     (set! draft-size 5)
     (for-each

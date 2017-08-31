@@ -233,9 +233,10 @@
 	    (set-nz-bar-t! nz (ntp-time-add (nz-bar-t nz) (nz-barlen nz))))
 	    
       (when (ntp>? future (nz-cur-t nz))
+	    (msg "step..")
 	    ;;(msg nz)
 	    ;;(msg (car (nz-cur-t nz)) " " (cadr (nz-cur-t nz)) " tick-time")
-	    ;;(msg (car now) " " (cadr now) " tick-real")
+	    (msg (car now) " " (cadr now) " tick-real")
 	    ;;(msg (car future) " " (cadr future) " tick-future")
 	    (let ((t (lz-tick (nz-lz nz)))
 		  (v (car (nz-vals nz))))
