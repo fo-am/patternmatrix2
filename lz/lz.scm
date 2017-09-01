@@ -224,6 +224,7 @@
       ((list-ref voices id) v d))))
 
 (define (nz-tick nz)
+  (audio-check)
   (let ((now (ntp-time)))
     (let ((future (ntp-time-add now (* (nz-tk nz) (nz-bpm-mult nz) 4))))
       (when (ntp>? future (nz-bar-t nz))
@@ -278,9 +279,9 @@
      (lambda (v d) (mul (adsr 0 (* (modulo v 12) 0.01) 1 0) (pink 4))))
 
     (list
-     (lambda (v d) (mul (adsr 0 0.1 0 0) (pink (mul (adsr 0 (* (modulo v 10) 0.2) 0 0) 1000))))
-     (lambda (v d) (mul (adsr 0 0.1 0.1 1) (sine (mul (adsr 0 0.2 0 0) 100))))
-     (lambda (v d) (mul (adsr 0 0.1 0.2 1) 
+     (lambda (v d) (mul (adsr 0 0.05 0 0) (pink (mul (adsr 0 (* (modulo v 10) 0.2) 0 0) 1000))))
+     (lambda (v d) (mul (adsr 0 0.05 0.1 1) (sine (mul (adsr 0 d 0 0) 100))))
+     (lambda (v d) (mul (adsr 0 0.05 0.1 1) 
 			(mooglp (white 1) (* (modulo v 10) 0.01) 0.27)))
      (lambda (v d) (mul 0.3 (echo (mul (adsr 0 (* (modulo v 10) 0.0125) 0 0) 
 			      (white (mul (adsr 0 0.05 0.2 0.3) 2000)))
@@ -305,11 +306,30 @@
 			 (add (mul (sine 0.1) 0.5) 0.5) 0.2)))
      (lambda (v d) (mul (adsr 0.5 d 0.5 d) 
 			(add
-			 (sine (* (note (+ v 6)) 4))
-			 (add (sine (* (note (+ v 8)) 4))
-			      (sine (* (note (+ v 12)) 4))))))
+			 (sine (* (note (+ v 0)) 4))
+			 (add (sine (* (note (+ v 4)) 4))
+			      (sine (* (note (+ v 7)) 4))))))
      (lambda (v d) (mul (adsr 0.5 5 0.5 5) 
 			(mooglp (white 1) (* (modulo v 10) 0.01) 0.27))))
+
+    (list ;; vocal
+     (lambda (v d) (mul (adsr 0.5 d 0.5 d) 
+			(formant
+			 (add (squ (note v)) (squ (* (note v) 1.01)))
+			 0 0.2)))
+     (lambda (v d) (mul (adsr 0.5 d 0.5 d) 
+			(formant
+			 (add (saw (note v)) (saw (* (note v) 1.01)))
+			 0.3 0.2)))
+     (lambda (v d) (mul (adsr 0.5 d 0.5 d) 
+			(formant
+			 (add (squ (note v)) (squ (* (note v) 1.01)))
+			 0.6 0.2)))
+     (lambda (v d) (mul (adsr 0.5 d 0.5 d) 
+			(formant
+			 (add (saw (note v)) (saw (* (note v) 1.01)))
+			 1 0.2))))
+
     
     (list ;; no sync messiness 
      (lambda (v d) (mul (adsr 5 5 0.5 5) (sine (add 100 (mul 400 (sine 0.3))))))
@@ -405,6 +425,23 @@
 			(sine (mul 300 (adsr 0 d 0 0)))))
      )
 
+    (list ;; rough
+     (lambda (v d) (mul (adsr 0 d 0 0)
+			(moogbp (squ (add 100 (mul 200 (white 100))))
+				(adsr 0 d 0 0) 0.4)))
+     (lambda (v d) (mul (adsr 0 d 0 0)
+			(moogbp (pink (mul 200 (saw 0.2)))
+				(adsr 0 d 0 0) 0.1)))
+     (lambda (v d) (mul (adsr 0 d 0 0)
+			(moogbp (squ (add (mul 100 (adsr 0 d 0 0)) 
+					  (mul 600 (white 100))))
+				(adsr 0 d 0 0) 0.1)))
+     (lambda (v d) (mul (adsr 0 d 0 0)
+			(mooghp (white (add 100 (mul 2000 (sine 50))))
+				(adsr 0 d 0 0) 0.1))))
+			  
+
+     
     )
 
    ;;--------------------------------------------------------
@@ -515,7 +552,7 @@
 
     (list
      (lambda (v d) ;; wobble bass
-       (mul (adsr 0 d 0.5 (* (modulo v 5) 0.02)) 
+       (mul (adsr 0 d 0.5 (* (modulo v 5) 0.02))
 	    (sine 
 	     (add (* (note v) 0.5)  
 		  (mul (mul 400 (adsr (* (modulo v 5) 0.02) 0.1 0.2 0.3))
@@ -525,7 +562,7 @@
 	    (sine 
 	     (add (note v) (mul (mul 5000 (adsr d d 0.5 d)) 
 				(sine (* (note v) 0.75)))))))
-     (lambda (v d) (mul (adsr 0 d 0.2 1) 
+     (lambda (v d) (mul (mul (adsr 0 d 0.2 1) 10) 
 			(crush (white (mul (adsr 0 d 0 0) 500)) 0.5 (+ 0.1 (* 0.1 (modulo v 10))))))
      (lambda (v d) (mul (adsr 0 d 0 0) (squ (mul (adsr 0 0.1 0 0) 200))))
 
@@ -581,8 +618,7 @@
 
     )
    ;;--------------------------------------------------------
-   (list ;; group 8 - aljazari
-    
+   (list ;; group 8 - aljazari    
     (list
      (lambda (v d) 
        (let ((in (* (+ (modulo v 10) 1) 200)))
@@ -619,16 +655,27 @@
 					     (add (mul 1000 (sine (* 0.3333 (note n)))) (note n)))))
      (lambda (n d) (mul (adsr 0 0.1 0.1 1) (squ (mul 100 (adsr 0 0.1 0 0))))))
 
+    (list ;; random 303
+     (lambda (v d) (mul (adsr 0 d 0 0) (klip (mooglp 
+					      (add (saw (/ (note v) 4)) (saw (/ (note v) 2.01)))
+					      (adsr (if (< (rndf) 0.5) 0 d) (if (< (rndf) 0.5) 0 d) 0 0) 0.1)
+					     0.003)))
+     (lambda (v d) (mul (adsr 0 d 0.1 d) (klip (mooglp 
+					      (add (squ (/ (note v) 4)) (squ (/ (note v) 4.01)))
+					      (adsr (if (< (rndf) 0.5) 0 d) (if (< (rndf) 0.5) 0 d) 0 0) 0.2)
+					     0.0004)))
+     (lambda (v d) (mul (adsr 0 d 0 0) (klip (mooglp 
+					      (add (saw (/ (note v) 8)) (saw (/ (note v) 4.01)))
+					      (adsr (if (< (rndf) 0.5) 0 d) (if (< (rndf) 0.5) 0 d) 0 0) 0.3)
+					     0.002)))
+     (lambda (v d) (mul (adsr 0 d 0.1 d) (klip (mooglp 
+						(add (squ (/ (note v) 2)) (saw (/ (note v) 4.01)))
+						(add 0.5 (adsr (if (< (rndf) 0.5) 0 d) (if (< (rndf) 0.5) 0.1 d) 0 0)) 0.4)
+					       0.0001)))
+     )
     
     )))
 
-;; ideas - fm zone
-;; noise grind
-;; no control echo zone
-;; more pads
-;; 4 chord progression
-;; ks effect
-;; pow/th/sh??
 
 (define (sample n) (mul (adsr 0.4 0.2 0 0) (sine n)))
 (define (get-sample n samples) (note n))
@@ -636,22 +683,16 @@
 
 (define l (build-lz 8 5 4))
 
-;(lz-prog l 0 "ad-B+")
-;(lz-prog l 1 "bc+C-")
-;(lz-prog l 2 "ab+D-")
-;(lz-prog l 3 "++A--")
+; (lz-prog l 0 "BBBC-")
+; (lz-prog l 1 "ab.cC")
+; (lz-prog l 2 "d+.a.")
+; (lz-prog l 3 ">AaA.")
 
-;; (lz-prog l 0 "aadBd")
-;; (lz-prog l 1 "a+C-d")
-;; (lz-prog l 2 "ca+D-")
-;; (lz-prog l 3 "+AaA-")
-
-(lz-prog l 0 "abbb ")
+(lz-prog l 0 "baaa ")
 (lz-prog l 1 ".....")
 (lz-prog l 2 ".....")
 (lz-prog l 3 ".....")
 
-;;(define z (build-nz (vector 9 5 '((4 2) (4 1) (6 0) (3 2) (4 1) (6 0)) 8 3 (list->vector (string->list "BaaadBdcd--C+++ --Aba+dd        "))) ss 0.2))
 (define z (build-nz l ss 0.2))
 
 (define (sync seconds fraction beat bpm)
@@ -681,12 +722,9 @@
 
 
 
-;; control blocks needed
-;; ---------------------
-;; chord 
-;; voice group
-;; bar sync lock
-;; more bass
+;; pow/th/sh??
+
+(audio-eq 0.8 1 0.6)
 
 (set-scale pentatonic-minor)
 ;;(set-scale harmonic-minor)
@@ -695,7 +733,7 @@
 (nz-dump z 1000)
 
 ;(set-nz-grp! z 7)
-;(set-nz-vx! z 0)
+;(set-nz-vx! z 3)
 ;(set-nz-bar-reset! z 6)
 
 (every-frame (nz-tick z))
