@@ -230,7 +230,7 @@
 	    (when (not (zero? (nz-bar-reset nz)))
 		  (set-lz-d! l 0)
 		  (set-lz-stk! l '((0 0)))
-		  (set-nz-vx! nz 0)
+		 ; (set-nz-vx! nz 0)
 		  (set-nz-vals! z '(20)))
 	    (set-nz-bar-t! nz (ntp-time-add (nz-bar-t nz) (nz-barlen nz))))
 	    
