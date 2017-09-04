@@ -233,7 +233,7 @@
 		  (set-lz-stk! l '((0 0)))
 		 ; (set-nz-vx! nz 0)
 		  (set-nz-vals! z '(20)))
-	    (set-nz-bar-t! nz (ntp-time-add (nz-bar-t nz) (nz-barlen nz))))
+	    (set-nz-bar-t! nz (ntp-time-add (nz-bar-t nz) (* (nz-barlen nz) (nz-bpm-mult nz)))))
 	    
       (when (ntp>? future (nz-cur-t nz))
 	    ;;(msg nz)
@@ -430,7 +430,7 @@
 			(moogbp (squ (add 100 (mul 200 (white 100))))
 				(adsr 0 d 0 0) 0.4)))
      (lambda (v d) (mul (adsr 0 d 0 0)
-			(moogbp (pink (mul 200 (saw 0.2)))
+			(moogbp (pink (mul 10 (add 0.5 (saw 0.2))))
 				(adsr 0 d 0 0) 0.1)))
      (lambda (v d) (mul (adsr 0 d 0 0)
 			(moogbp (squ (add (mul 100 (adsr 0 d 0 0)) 
@@ -562,7 +562,7 @@
 	    (sine 
 	     (add (note v) (mul (mul 5000 (adsr d d 0.5 d)) 
 				(sine (* (note v) 0.75)))))))
-     (lambda (v d) (mul (mul (adsr 0 d 0.2 1) 10) 
+     (lambda (v d) (mul (adsr 0 d 0.2 1) 
 			(crush (white (mul (adsr 0 d 0 0) 500)) 0.5 (+ 0.1 (* 0.1 (modulo v 10))))))
      (lambda (v d) (mul (adsr 0 d 0 0) (squ (mul (adsr 0 0.1 0 0) 200))))
 
