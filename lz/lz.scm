@@ -304,11 +304,11 @@
 			  (add (saw (* (note (+ v 8)) 1.5))
 			       (saw (* (note (+ v 12)) 1.5))))
 			 (add (mul (sine 0.1) 0.5) 0.5) 0.2)))
-     (lambda (v d) (mul (adsr 0.5 d 0.5 d) 
+     (lambda (v d) (mul (mul (adsr 0.5 d 0.5 d) 0.2) 
 			(add
 			 (sine (* (note (+ v 0)) 4))
-			 (add (sine (* (note (+ v 4)) 4))
-			      (sine (* (note (+ v 7)) 4))))))
+			 (add (sine (* (note (- v 4)) 4.08))
+			      (sine (* (note (- v 7)) 3.92))))))
      (lambda (v d) (mul (adsr 0.5 5 0.5 5) 
 			(mooglp (white 1) (* (modulo v 10) 0.01) 0.27))))
 
@@ -332,7 +332,7 @@
 
     
     (list ;; no sync messiness 
-     (lambda (v d) (mul (adsr 5 5 0.5 5) (sine (add 100 (mul 400 (sine 0.3))))))
+     (lambda (v d) (mul (adsr 5 5 0.5 5) (sine (add 100 (mul 200 (sine 0.3))))))
      (lambda (v d) (mul (adsr 5 5 0.5 5) (pink (add 100 (mul 10 (sine 0.72))))))    
      (lambda (v d) (mul (adsr 5 5 0.5 5) (crush 
 					  (white (add 100 (mul 400 (sine 0.32))))
