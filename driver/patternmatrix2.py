@@ -115,6 +115,12 @@ def update_debug(pat):
     
 osc.Message("/eval",["(set-scale pentatonic-minor)"]).sendlocal(8000)
 
+def send_ar(pat):
+    try:
+        osc.Message("/matrix",[pat]).sendto("192.168.0.20",8000)
+    except Exception:
+        pass
+
 #######################################################
 
 last=""
@@ -134,6 +140,7 @@ while True:
         last=cc    
         print(pat)
         send_pattern(pat)
+        send_ar(cc)
     grp=grid.state[20].value_current
     if grp!=last_grp:
         last_grp=grp
