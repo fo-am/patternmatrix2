@@ -225,8 +225,9 @@
 
 (define (nz-tick nz)
   (audio-check)
-  (let ((now (ntp-time)))
-    (let ((future (ntp-time-add now (* (nz-tk nz) (nz-bpm-mult nz) 4))))
+  (let ((now (ntp-time))
+	(future-offset (* (nz-tk nz) (nz-bpm-mult nz) 4)))
+    (let ((future (ntp-time-add now future-offset)))
       (when (ntp>? future (nz-bar-t nz))
 	    (when (not (zero? (nz-bar-reset nz)))
 		  (set-lz-d! l 0)
@@ -240,6 +241,9 @@
 	    ;;(msg (car (nz-cur-t nz)) " " (cadr (nz-cur-t nz)) " tick-time")
 	    ;;(msg (car now) " " (cadr now) " tick-real")
 	    ;;(msg (car future) " " (cadr future) " tick-future")
+	    ;; send to the AR
+	    (osc-send "osc.udp://192.168.0.20:8000" "/tick" "fii" (cons future-offset (lz-top (nz-lz nz))))		    
+	    
 	    (let ((t (lz-tick (nz-lz nz)))
 		  (v (car (nz-vals nz))))
 	      (cond
