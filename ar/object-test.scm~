@@ -1,0 +1,4 @@
+(clear)
+(hint-wire)
+(load-primitive "models/spiral.obj")
+
