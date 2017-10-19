@@ -64,9 +64,9 @@ def convert_symbols(s):
 
 symbols = {" ":[1,1,1,1],".":[0,0,0,0],
            "+":[1,0,1,0],"-":[0,1,0,1],
-           "a":[1,1,0,0],"b":[0,1,1,0],"c":[0,0,1,1],"d":[1,0,0,1],
-           "C":[1,0,0,0],"D":[0,1,0,0],"A":[0,0,1,0],"B":[0,0,0,1],
-           "<":[0,1,1,1],"[":[1,0,1,1],">":[1,1,0,1],"]":[1,1,1,0]}
+           "A":[1,1,0,0],"B":[0,1,1,0],"C":[0,0,1,1],"D":[1,0,0,1],
+#'           "C":[1,0,0,0],"D":[0,1,0,0],"A":[0,0,1,0],"B":[0,0,0,1],"<":[0,1,1,1],"[":[1,0,1,1],">":[1,1,0,1],"]":[1,1,1,0]}
+           "c":[1,0,0,0],"d":[0,1,0,0],"a":[0,0,1,0],"b":[0,0,0,1],"g":[0,1,1,1],"h":[1,0,1,1],"e":[1,1,0,1],"f":[1,1,1,0]}
 
 symbols = convert_symbols(symbols)
 
@@ -90,6 +90,10 @@ def send_grp(grp):
 #    osc.Message("/eval",["(set-nz-vx! z 0)"]).sendlocal(8000)
     osc.Message("/eval",["(set-nz-grp! z "+str(grp)+")"]).sendlocal(8000)
 
+def send_vx(vx):
+    print("vx: "+str(vx))
+    osc.Message("/eval",["(set-nz-vx! z "+str(vx)+")"]).sendlocal(8000)
+    
 def send_bar(bar):
     print("bar: "+str(bar))
     osc.Message("/eval",["(set-nz-bar-reset! z "+str(bar)+")"]).sendlocal(8000)
@@ -115,10 +119,17 @@ def update_debug(pat):
     
 osc.Message("/eval",["(set-scale pentatonic-minor)"]).sendlocal(8000)
 
+def send_ar(pat):
+    try:
+        osc.Message("/matrix",[pat]).sendto("192.168.0.20",8000)
+    except Exception:
+        pass
+
 #######################################################
 
 last=""
 last_grp=0
+last_vx=0
 last_bar=0
 last_sch=0
 last_mul=0
@@ -134,6 +145,7 @@ while True:
         last=cc    
         print(pat)
         send_pattern(pat)
+        send_ar(cc)
     grp=grid.state[20].value_current
     if grp!=last_grp:
         last_grp=grp
@@ -145,18 +157,18 @@ while True:
         if grp==11: send_grp(5)
         if grp==13: send_grp(6)
         if grp==14: send_grp(7)
-
-    bar=grid.state[21].value_current
-    if bar!=last_bar:
-        last_bar=bar
-        if bar==1: send_bar(0)
-        if bar==2: send_bar(4)
-        if bar==4: send_bar(8)
-        if bar==8: send_bar(6)
-        if bar==7: send_bar(12)
-        if bar==11: send_bar(16)
-        if bar==13: send_bar(24)
-        if bar==14: send_bar(32)
+        
+    vx=grid.state[21].value_current
+    if vx!=last_vx:
+        last_vx=vx
+        if vx==1: send_vx(0)
+        if vx==2: send_vx(1)
+        if vx==4: send_vx(2)
+        if vx==8: send_vx(3)
+        if vx==7: send_vx(4)
+        if vx==11: send_vx(5)
+        if vx==13: send_vx(6)
+        if vx==14: send_vx(7)
 
     sch=grid.state[22].value_current
     if sch!=last_sch:
@@ -177,10 +189,23 @@ while True:
         if mul==2: send_mul(2)
         if mul==4: send_mul(3)
         if mul==8: send_mul(4)
-        if mul==7: send_mul(0.5)
-        if mul==11: send_mul(0.25)
-        if mul==13: send_mul(0.125)
-        if mul==14: send_mul(1)
+        if mul==7: send_mul(1)
+        if mul==11: send_mul(0.5)
+        if mul==13: send_mul(0.25)
+        if mul==14: send_mul(0.125)
+
+    bar=grid.state[24].value_current
+    if bar!=last_bar:
+        last_bar=bar
+        if bar==1: send_bar(0)
+        if bar==2: send_bar(4)
+        if bar==4: send_bar(8)
+        if bar==8: send_bar(6)
+        if bar==7: send_bar(12)
+        if bar==11: send_bar(16)
+        if bar==13: send_bar(24)
+        if bar==14: send_bar(32)
+
         
         #grid.pprint(5)
     time.sleep(frequency)

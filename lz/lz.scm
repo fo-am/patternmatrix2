@@ -225,8 +225,9 @@
 
 (define (nz-tick nz)
   (audio-check)
-  (let ((now (ntp-time)))
-    (let ((future (ntp-time-add now (* (nz-tk nz) (nz-bpm-mult nz) 4))))
+  (let ((now (ntp-time))
+	(future-offset (* (nz-tk nz) (nz-bpm-mult nz) 4)))
+    (let ((future (ntp-time-add now future-offset)))
       (when (ntp>? future (nz-bar-t nz))
 	    (when (not (zero? (nz-bar-reset nz)))
 		  (set-lz-d! l 0)
@@ -240,28 +241,39 @@
 	    ;;(msg (car (nz-cur-t nz)) " " (cadr (nz-cur-t nz)) " tick-time")
 	    ;;(msg (car now) " " (cadr now) " tick-real")
 	    ;;(msg (car future) " " (cadr future) " tick-future")
+	    ;; send to the AR
+	    (osc-send "osc.udp://192.168.0.20:8000" "/tick" "fii" (cons future-offset (lz-top (nz-lz nz))))		    
+	    
 	    (let ((t (lz-tick (nz-lz nz)))
 		  (v (car (nz-vals nz))))
 	      (cond
 	       ((char=? t #\+) (set-nz-vals! nz (cons (modulo (+ (car (nz-vals nz)) 1) 100) (cdr (nz-vals nz)))))
 	       ((char=? t #\-) (set-nz-vals! nz (cons (modulo (- (car (nz-vals nz)) 1) 100) (cdr (nz-vals nz)))))
-	       ((char=? t #\<) (set-nz-vx! nz (modulo (- (nz-vx nz) 1) (length (nz-sz nz)))))
-	       ((char=? t #\>) (set-nz-vx! nz (modulo (+ (nz-vx nz) 1) (length (nz-sz nz)))))
+	       ;;((char=? t #\<) (set-nz-vx! nz (modulo (- (nz-vx nz) 1) (length (nz-sz nz)))))
+	       ;;((char=? t #\>) (set-nz-vx! nz (modulo (+ (nz-vx nz) 1) (length (nz-sz nz)))))
 	       ((char=? t #\a) (play (nz-cur-t nz) (nz-sound nz 0 v (* (nz-tk nz) (nz-bpm-mult nz))) 0.2))
 	       ((char=? t #\b) (play (nz-cur-t nz) (nz-sound nz 1 v (* (nz-tk nz) (nz-bpm-mult nz))) -0.2))
 	       ((char=? t #\c) (play (nz-cur-t nz) (nz-sound nz 2 v (* (nz-tk nz) (nz-bpm-mult nz))) 0.7))
 	       ((char=? t #\d) (play (nz-cur-t nz) (nz-sound nz 3 v (* (nz-tk nz) (nz-bpm-mult nz))) -0.7))
-	       ((char=? t #\[) (nz-dup! nz))
-	       ((char=? t #\]) (nz-pop! nz)))
+	       ((char=? t #\e) (play (nz-cur-t nz) (nz-sound nz 4 v (* (nz-tk nz) (nz-bpm-mult nz))) 0.2))
+	       ((char=? t #\f) (play (nz-cur-t nz) (nz-sound nz 5 v (* (nz-tk nz) (nz-bpm-mult nz))) -0.2))
+	       ((char=? t #\g) (play (nz-cur-t nz) (nz-sound nz 6 v (* (nz-tk nz) (nz-bpm-mult nz))) 0.7))
+	       ((char=? t #\h) (play (nz-cur-t nz) (nz-sound nz 7 v (* (nz-tk nz) (nz-bpm-mult nz))) -0.7))
+	       ;;((char=? t #\[) (nz-dup! nz))
+	       ;;((char=? t #\]) (nz-pop! nz))
+	       )
 	      (when (or (char=? t #\a) (char=? t #\b)
 	                (char=? t #\c) (char=? t #\d)
+	                (char=? t #\e) (char=? t #\f)
+	                (char=? t #\g) (char=? t #\h)
 	                (char=? t #\.))
 		    (set-nz-cur-t! nz (ntp-time-add (nz-cur-t nz) (* (nz-tk nz) (nz-bpm-mult nz)))))
 	      )))))
-
+  
 ; --
 
-
+(display "ofofof")(newline)
+  
 (define ss
   (list
    ;;--------------------------------------------------------
@@ -270,9 +282,9 @@
      (lambda (v d) (mul (adsr 0 (/ d 2) 0 0) (sine (note v))))
      (lambda (v d) (mul (adsr 0 (/ d 2) 0 0) (sine (* 2 (note v)))))
      (lambda (v d) (mul (adsr 0 (/ d 2) 0 0) (tri (note v))))
-     (lambda (v d) (mul (adsr 0 (/ d 2) 0 0) (mul (tri (note v)) (tri (note (+ v 2)))))))
+     (lambda (v d) (mul (adsr 0 (/ d 2) 0 0) (mul (tri (note v)) (tri (note (+ v 2))))))
 	     
-    (list ;; short test tones
+     ;; short test tones
      (lambda (v d) (mul (adsr 0 (* (modulo v 10) 0.01) 0.1 1) (tri (add (note v) (mul 10 (sine 1))))))
      (lambda (v d) (mul (adsr 0 (* (modulo v 9) 0.01) 0.1 1) (sine (add (* (note v) 3) (mul 10 (sine 1.3))))))
      (lambda (v d) (mul (adsr 0 (* (modulo v 11) 0.01) 1 0) (tri (note (+ v 4)))))
@@ -284,8 +296,17 @@
      (lambda (v d) (mul (adsr 0 0.05 0.1 1) 
 			(mooglp (white 1) (* (modulo v 10) 0.01) 0.27)))
      (lambda (v d) (mul 0.3 (echo (mul (adsr 0 (* (modulo v 10) 0.0125) 0 0) 
-			      (white (mul (adsr 0 0.05 0.2 0.3) 2000)))
-			 (* (modulo v 9) 0.125 d) 0.95))))
+				       (white (mul (adsr 0 0.05 0.2 0.3) 2000)))
+				  (* (modulo v 9) 0.125 d) 0.95)))
+    
+    ;; random acid w kik
+     (lambda (v d) (mul (adsr 0 d 0 0) (mooglp (saw (note v)) (rndf) (rndf))))
+     (lambda (v d) (mul (adsr 0 d 0.1 1) (mooghp (saw (note v)) (rndf) (rndf))))
+     (lambda (v d) (mul (adsr 0 d 0 0) (moogbp (saw (/ (note v) 2)) (rndf) (rndf))))
+     (lambda (v d) (mul (adsr 0 d 0 0) (squ (mul (adsr 0 0.1 0 0) 200))))
+     )
+
+
     )
    ;;--------------------------------------------------------
    (list ;; group 2 - arhythmic V
@@ -310,9 +331,8 @@
 			 (add (sine (* (note (- v 4)) 4.08))
 			      (sine (* (note (- v 7)) 3.92))))))
      (lambda (v d) (mul (adsr 0.5 5 0.5 5) 
-			(mooglp (white 1) (* (modulo v 10) 0.01) 0.27))))
+			(mooglp (white 1) (* (modulo v 10) 0.01) 0.27)))
 
-    (list ;; vocal
      (lambda (v d) (mul (adsr 0.5 d 0.5 d) 
 			(formant
 			 (add (squ (note v)) (squ (* (note v) 1.01)))
@@ -359,23 +379,22 @@
      (lambda (v d) (crush (mul (adsr 0 0.03 0.1 5) 
 			       (mul (tri (* (note v) 1.001))
 				    (tri (note v))))
-			  (* (+ 2 (modulo v 12)) 2) 0.1)))
+			  (* (+ 2 (modulo v 12)) 2) 0.1))
     
-    ;;    (list ;; totally out of tune
-    ;;     (lambda (v d) (mul (adsr 0 0.01 0.1 1) (saw (+ 440 (* v 20)))))
-    ;;     (lambda (v d) (mul (adsr 0 0.01 0.1 1) (saw (+ 240 (* v 20)))))
-    ;;     (lambda (v d) (mul (adsr 0 0.01 0.1 1) (saw (+ 140 (* v 20)))))
-    ;;     (lambda (v d) (mul (adsr 0 0.01 0.1 1) (saw (mul (adsr 0 0.1 0 0) (+ 40 (* v 50)))))))
+     ;; totally out of tune
+     (lambda (v d) (mul (adsr 0 0.01 0.1 1) (saw (+ 440 (* v 20)))))
+     (lambda (v d) (mul (adsr 0 0.01 0.1 1) (saw (+ 240 (* v 20)))))
+     (lambda (v d) (mul (adsr 0 0.01 0.1 1) (saw (+ 140 (* v 20)))))
+     (lambda (v d) (mul (adsr 0 0.01 0.1 1) (saw (mul (adsr 0 0.1 0 0) (+ 40 (* v 50)))))))
     
     (list ;; basic glitch in tune
      (lambda (v d) (mul (adsr 0 0.1 0.1 1) (pink (note v))))
      (lambda (v d) (mul (adsr 0 0.1 0.1 1) (sine (note v))))
      (lambda (v d) (mul (adsr 0 0.1 0.1 1) (pink (note (- v 12)))))
      (lambda (v d) (echo (mul (adsr 0 0.11 0.1 1) (pink (note (+ v 12)))) 
-			 (* (modulo v 9) 0.25 (nz-tk z)) 0.9)))
-    
+			 (* (modulo v 9) 0.25 (nz-tk z)) 0.9)) 
 
-    (list ;; acid tune
+     ;; acid tune
      (lambda (v d) (mul (adsr 0 d 0.3 0.4) (saw (note v))))
      (lambda (v d) (mooghp (mul (adsr 0 d 0.3 0.4) (add (saw (note v)) (saw (note (+ v 2))))) (adsr d d 0 0) 0.3))
      (lambda (v d) (mooghp (mul (adsr 0 d 0.3 0.4) (add (saw (note v)) (saw (note (+ v 3))))) (adsr 0 d 0 0) 0.2))
@@ -399,9 +418,9 @@
 			  (* (modulo v 41) 0.1) 30))
      (lambda (v d) (crush (mul (adsr 0 d 0.3 0.5) (sine (mul (adsr 0 0.1 0.1 0.3) 100)))
 			  (* (modulo v 51) 0.1) 20))
-     )
 
-    (list ;; arcade
+
+      ;; arcade
      (lambda (v d) (crush (moogbp (mul (adsr 0 d 0.1 0.5) (white 10)) 
 				  (adsr 0 d 0.2 0.1) 0.5)
 			  (* (modulo v 41) 0.1) 30))
@@ -423,9 +442,9 @@
 			  (* (modulo v 41) 0.1) 0.3))
      (lambda (v d) (mul (adsr 0 d 0 0)
 			(sine (mul 300 (adsr 0 d 0 0)))))
-     )
+     
 
-    (list ;; rough
+     ;; rough
      (lambda (v d) (mul (adsr 0 d 0 0)
 			(moogbp (squ (add 100 (mul 200 (white 100))))
 				(adsr 0 d 0 0) 0.4)))
@@ -457,7 +476,28 @@
      (lambda (v d) (mul (adsr 0 d 0.5 0.4) (ks (note (/ v 4)) (+ 0.9 (* (modulo v 5) 0.002)) 0.1)))
      (lambda (v d) (formant (mul (adsr 0 d 0.2 1)  
 				 (add (tri 12) (tri 42.3))) 
-			    (* (modulo v 15) 0.1) 0)))
+			    (* (modulo v 15) 0.1) 0))
+
+     ;; stabs
+     (lambda (v d) (mul (adsr 0 d 0 1) 
+			(moogbp 
+			 (add 
+			  (add (saw (note v))
+			       (saw (* (note v) 1.5)))
+			  (saw (* (note v) 1.02)))
+			 (* (modulo v 4) 0.25)
+			 0.3)))
+     (lambda (v d) (mul (adsr 0 d 0.2 1) 
+			(moogbp 
+			 (add 
+			  (add (squ (note v))
+			       (squ (* (note v) 1.5)))
+			  (squ (* (note v) 1.02)))
+			 (* (modulo v 5) 0.2) 
+			 0.4)))
+     (lambda (v d) (mul (adsr 0 d 0 0) (moogbp (saw (/ (note v) 2)) (rndf) (rndf))))
+     (lambda (v d) (mul (adsr 0 d 0 0) (squ (mul (adsr 0 0.1 0 0) 200))))
+     )
 
  
     (list ;; fm squelch glich slow-grow
@@ -471,10 +511,9 @@
 			       (note v)))))
      (lambda (v d) (mul (adsr 0 0.01 0.1 1) (sine (add (mul 20 (sine 40)) (note v)))))
      (lambda (v d) (mul (adsr 0 0.01 1 0.1) (crush (pink 40) 3 (* (+ (modulo v 12) 1) 0.02))))
-     (lambda (v d) (mul (adsr 0 0.01 1 2) (pad (/ (note v) 8) (* (modulo v 5) 0.02) 0.5 0.6))))
+     (lambda (v d) (mul (adsr 0 0.01 1 2) (pad (/ (note v) 8) (* (modulo v 5) 0.02) 0.5 0.6)))
  
-
-    (list ;; gamey dubstep
+     ;; gamey dubstep
      (lambda (v d) (mul (adsr 0.2 0.03 0.1 1) (crush (sine (* (note v) 0.5))
 						     0.1 0.3)))
      (lambda (v d) (mul (adsr 0 0.1 0.1 1) (mooglp (white (* 0.125 (note v)))
@@ -503,9 +542,9 @@
      (lambda (v d) (mul (adsr 0.04 0.02 0 0) (mooglp (white 4) (* v 0.01) 0.45)))
      (lambda (v d) (mul (adsr 0 d 0 0) (squ (add
 						(fmod (* v 50) 100)
-						(mul 500 (pow (adsr 0 0.2 0 0) 10)))))))
+						(mul 500 (pow (adsr 0 0.2 0 0) 10))))))
 
-    (list ;; toy drums
+     ;; toy drums
      (lambda (v d) (mul (adsr 0 0.05 0 1) (pink 4)))
      (lambda (v d) (mul (adsr 0 d 0.1 1) 
 			(distort 
@@ -522,10 +561,10 @@
      (lambda (v d) (mul (adsr 0 0.1 0 0)
 			(moogbp (squ (add 10 (mul 500 (pow (adsr 0 0.5 0.3 0.3) 10))))
 				(* v 0.1) 0.1)))
-     (lambda (v d) (mul (adsr 0 0.02 0 0) (moogbp (white 4) (* v 0.01) 0.45))))
+     (lambda (v d) (mul (adsr 0 0.02 0 0) (moogbp (white 4) (* v 0.01) 0.45)))
 
 
-    (list ;; nice percs
+     ;; nice percs
      (lambda (v d) ;; wobble bass
        (mul (adsr 0 d 0.1 1) 
 	    (sine 
@@ -548,9 +587,8 @@
      (lambda (v d) (mooghp (mul (adsr 0 d 0 0) (white 3)) (adsr 0 d 0 0) 0.1))
      (lambda (v d) (crush (mul (adsr 0 d 0.3 0.5) (sine (mul (adsr 0 0.1 0.1 0.3) 100)))
 			  (* (modulo v 51) 0.1) 20))
-     )
-
-    (list
+   
+   
      (lambda (v d) ;; wobble bass
        (mul (adsr 0 d 0.5 (* (modulo v 5) 0.02))
 	    (sine 
@@ -573,9 +611,8 @@
      (lambda (v d) (mooglp (mul (adsr 0 d 0 0) (saw (/ (note v) 3))) (adsr 0 d 0 0) 0.1))
      (lambda (v d) (moogbp (mul (adsr 0 d 0 1) (white 3)) (pow (adsr 0 d 0 0) 10) 0.1))
      (lambda (v d) (mul (adsr 0 d 0.3 0.5) (sine (mul (adsr 0 0.2 0.1 0.3) 100))))
-     )
-
-    (list ;; random acid w kik
+     
+     ;; random acid w kik
      (lambda (v d) (mul (adsr 0 d 0 0) (moogbp (add (saw (note v))
 						    (saw (* (note v) 0.75)))
 					       (mul (adsr 0 d 0 0) (* (modulo v 10) 0.1)) 0.7)))
@@ -586,35 +623,7 @@
      (lambda (v d) (mul (adsr 0 d 0.1 1) (crush (white (mul (adsr 0 d 0.4 1) 500)) 0.5 (* 0.1 (modulo v 10)))))
      (lambda (v d) (mul (adsr 0 d 0 0) (squ (mul (adsr 0 d 0 0) (+ 200 (* 2 (modulo v 15)))))))
      )
-
-    (list ;; stabs
-     (lambda (v d) (mul (adsr 0 d 0 1) 
-			(moogbp 
-			 (add 
-			  (add (saw (note v))
-			       (saw (* (note v) 1.5)))
-			  (saw (* (note v) 1.02)))
-			 (* (modulo v 4) 0.25)
-			 0.3)))
-     (lambda (v d) (mul (adsr 0 d 0.2 1) 
-			(moogbp 
-			 (add 
-			  (add (squ (note v))
-			       (squ (* (note v) 1.5)))
-			  (squ (* (note v) 1.02)))
-			 (* (modulo v 5) 0.2) 
-			 0.4)))
-     (lambda (v d) (mul (adsr 0 d 0 0) (moogbp (saw (/ (note v) 2)) (rndf) (rndf))))
-     (lambda (v d) (mul (adsr 0 d 0 0) (squ (mul (adsr 0 0.1 0 0) 200))))
-     )
-
-    (list ;; random acid w kik
-     (lambda (v d) (mul (adsr 0 d 0 0) (mooglp (saw (note v)) (rndf) (rndf))))
-     (lambda (v d) (mul (adsr 0 d 0.1 1) (mooghp (saw (note v)) (rndf) (rndf))))
-     (lambda (v d) (mul (adsr 0 d 0 0) (moogbp (saw (/ (note v) 2)) (rndf) (rndf))))
-     (lambda (v d) (mul (adsr 0 d 0 0) (squ (mul (adsr 0 0.1 0 0) 200))))
-     )
-
+;;;;; ----------
 
     )
    ;;--------------------------------------------------------
@@ -632,10 +641,8 @@
      (lambda (n d) (mul (adsr 0 0.1 0 0) (mooglp (squ (* 0.25 (note n)))
 						 (adsr 0.1 0 0 0) 0.4)))
      (lambda (n d) (mul (adsr 0 0.1 0.05 1) (sine
-					     (add (mul 100 (sine (* 0.3333 (note n)))) (note n))))))
-    
-    
-    (list
+					     (add (mul 100 (sine (* 0.3333 (note n)))) (note n)))))
+         
      (lambda (n d) (mul 1 (sample (get-sample n samples) 440)))
      (lambda (n d) (mul (adsr 0 0.1 0 0)
 			(mul (saw (note n)) (sine (mul (mul 0.1 (adsr 0.4 0.3 0 0)) (note n))))))
@@ -653,9 +660,9 @@
 					  (* 0.1 (random 10)) 0.48)))
      (lambda (n d) (mul (adsr 0 0.1 0.05 1) (sine
 					     (add (mul 1000 (sine (* 0.3333 (note n)))) (note n)))))
-     (lambda (n d) (mul (adsr 0 0.1 0.1 1) (squ (mul 100 (adsr 0 0.1 0 0))))))
+     (lambda (n d) (mul (adsr 0 0.1 0.1 1) (squ (mul 100 (adsr 0 0.1 0 0)))))
 
-    (list ;; random 303
+     ;; random 303
      (lambda (v d) (mul (adsr 0 d 0 0) (klip (mooglp 
 					      (add (saw (/ (note v) 4)) (saw (/ (note v) 2.01)))
 					      (adsr (if (< (rndf) 0.5) 0 d) (if (< (rndf) 0.5) 0 d) 0 0) 0.1)
@@ -739,3 +746,5 @@
 (every-frame (nz-tick z))
 
 ;;(synth-record "outz")
+
+(display "running")(newline)
