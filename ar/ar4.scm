@@ -76,20 +76,21 @@
         (+ (* a t t t) (* b t t) (* c t) B)))
 
 
-(define (extrude profile width path prim t) 
-    (list profile width path prim t))
+(define (extrude profile width path prim t state) 
+    (list profile width path prim t state))
 (define (extrude-profile p) (list-ref p 0))
 (define (extrude-width p) (list-ref p 1))
 (define (extrude-path p) (list-ref p 2))
 (define (extrude-prim p) (list-ref p 3))
 (define (extrude-t p) (list-ref p 4))
+(define (extrude-state p) (list-ref p 5))
 
 (define extrude-points 20)
 
 (define (build-extrude a b c d)
     (let ((profile (build-circle-points 8 0.5))
             (width (build-list extrude-points
-                    (lambda (n) 1)))
+                    (lambda (n) 0.5)))
             (path (build-list extrude-points
                     (lambda (n) (vector 
                             (cubic-hermite (vx a) (vx b) (vx c) (vx d) (/ n 100))
@@ -101,24 +102,29 @@
                 (colour (vector 1 1 0))   
                 (specular (vector 1 1 1))
                 (shinyness 20)
-                ;(hint-wire)
-                (build-partial-extrusion profile path 10)) 0)))
+                (hint-wire)
+                (line-width 1)
+                (wire-colour (vector 1 1 0))   
+                (build-partial-extrusion profile path 10)) 0 'growing)))
 
 (define (update-extrude e)
     (if (< (extrude-t e) 1)
         (with-primitive (extrude-prim e)
             (partial-extrude 
-                (* (extrude-t e) (+ (length (extrude-path e)) 5))
+                (if (eq? (extrude-state e) 'growing)
+                   (* (extrude-t e) (length (extrude-path e)))
+                   (* (- 1 (extrude-t e)) (length (extrude-path e))))
                 (extrude-profile e) 
                 (extrude-path e)
                 (extrude-width e)
-                (vector 0 1 0) 0.05)
+                (vector 0 1 0) 0.15)
             (extrude 
                 (extrude-profile e) 
                 (extrude-width e)
                 (extrude-path e)
                 (extrude-prim e) 
-                (+ (extrude-t e) 0.01)))
+                (+ (extrude-t e) (delta))
+                (extrude-state e)))
         e))
 
 (define (extrude-new-path e a b c d)
@@ -131,7 +137,16 @@
                     (cubic-hermite (vy a) (vy b) (vy c) (vy d) (/ n extrude-points))
                     (cubic-hermite (vz a) (vz b) (vz c) (vz d) (/ n extrude-points)))))
         (extrude-prim e) 
-        0))
+        0 'growing))
+
+(define (extrude-ungrow e)
+    (extrude 
+        (extrude-profile e) 
+        (extrude-width e)
+        (extrude-path e)
+        (extrude-prim e) 
+        (if (eq? (extrude-state e) 'growing) 0 1) ;; check we are grown
+        'ungrowing))
 
 (define rule-a-location (vector 17.5 -17.5 0))
 (define rule-b-location (vector 17.5 -8.5 0))
@@ -151,7 +166,11 @@
         (with-primitive 
             p
             (backfacecull 0)
+            ;;(hint-none)
+            (hint-wire)
             (colour (vector 1 0.2 0.5))
+            (line-width 1)
+            (wire-colour (vector 1 0.2 0.5))
             (identity) ;; clear state transform
             (rotate (vector 0 0 180))
             (translate (vector -1. -1.3 1))
@@ -256,7 +275,7 @@
                         ((string=? new-text "B") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-b-location (vadd rule-b-location rule-extrude-direction)))
                         ((string=? new-text "C") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-c-location (vadd rule-c-location rule-extrude-direction)))
                         ((string=? new-text "D") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-d-location (vadd rule-d-location rule-extrude-direction)))          
-                        (else (token-extrude token))) 
+                        (else (extrude-ungrow (token-extrude token)))) 
                     0.5
                     new-text
                     (token-flash-t token))))))
@@ -267,11 +286,14 @@
   (with-primitive
    (car (token-gumpf token))
    (when (> (token-flash-t token) 0)
+       (colour (vector 1 1 0))
+       (when (> (token-flash-t token) 0.1) 
+         (colour (vector 2 2 2)))
        (let ((c (vlerp (vector 1 1 0) (vector 1 0.2 0.4) (* 2 (token-flash-t token)))))
          (colour c))
        ;;(pdata-map! (lambda (p pref v) (vadd pref (vmul v (token-flash-t token)))) "p" "pref" "vel"))
        ;;(pdata-index-map! (lambda (i w) (+ 0.5 (* 0.4 (sin (* 0.5 (+ i (* (token-flash-t token) 40))))))) "w"))
-       (pdata-index-map! (lambda (i w) (+ 1 (* (token-flash-t token) (sin (* 0.25 i))))) "w"))
+       (pdata-index-map! (lambda (i w) (+ 1 (* (token-flash-t token) 10 (sin (* 0.25 i))))) "w"))
    (if (> (token-t token) 0)
        (pdata-map! (lambda (p pref) (vadd pref (vmul (srndvec) (* 10 (token-t token))))) "p" "pref")
        (pdata-copy "pref" "p"))
@@ -280,8 +302,13 @@
   (when (> (token-flash-t token) 0)
     (with-primitive
      (token-text token)
-     (let ((c (vlerp (vector 1 0.2 0.4) (vector 1 1 1) (* 2 (token-flash-t token)))))
-       (colour c))))
+     (identity)     
+     (translate (vector 1 0 0))
+     (when (> (token-flash-t token) 0.05) 
+        (scale (vector 1 1 (* 10 (token-flash-t token)))))
+     (translate (vector -1 0 1))
+     (translate (vector 1. 1.3 0))
+     (rotate (vector 0 0 180))))     
 
   (when (> (token-t token) 0)
     (with-primitive
@@ -360,7 +387,7 @@
             (let* ((pp (vmul p 0.3))                     
                     (v (vector (- (noise (vx pp) (vy pp) (time)) 0.5)                             
                             (- (noise (vx pp) (+ (vy pp) 112.3) vg-t) 0.5) 0)))
-                (vadd (vadd p (vmul v 0.2))                     
+                (vadd (vadd p (vmul v 0.8))                     
                     (vmul (srndvec) 0.005))))         
         "p"))
 
@@ -410,7 +437,7 @@
     (with-primitive 
         particles
         (vg-npush-particles)
-        (pdata-map! (lambda (c) (vmul c 0.99)) "c")))
+        (pdata-map! (lambda (c) (vmul c 0.995)) "c")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -419,9 +446,11 @@
 (define (seq-event-pos s) (list-ref s 1))
 
 (define (add-seq-event l msg)
-    (cons (seq-event (+ (time) (list-ref msg 0))
+    (if (< (length l) 10)
+         (cons (seq-event (+ (time) (list-ref msg 0))
             (+ (- (list-ref msg 1) 1)
-                (* (list-ref msg 2) 5))) l))
+                (* (list-ref msg 2) 5))) l)
+          l))
 
 (define (update-seq-events l c)
     (foldl
@@ -466,7 +495,7 @@
         ((null? src) "")
         (else (string-append 
                 (if (< (random 100) 2)
-                    (string (choose (string->list "ABCDabcd+-<>?")))
+                    (string (choose (string->list "ABCDabcdefgh+-. ")))
                     (string (car src)))
                 (randomise-string (cdr src))))))
 
@@ -478,6 +507,8 @@
             (set! seq-events (add-seq-event seq-events (list (osc 0) (osc 1) (osc 2)))))
             (display (list (osc 0) (osc 1) (osc 2)))(newline)
         (drain-tick)))
+
+(define frame 0)
 
 (define (render)
     (arloop)
@@ -497,11 +528,14 @@
         (concat base-transform))
     
     ;(when (zero? (modulo frame 40))
-        ;  (set! str (randomise-string (string->list str)))
-        ;  (set! c (update-grid c str)))
+    ;      (set! str (randomise-string (string->list str)))
+    ;      (set! c (update-grid c str)))
+
+    ;(when (zero? (modulo frame 10))
+    ;      (set! seq-events (add-seq-event seq-events (list 0 (+ 1 (random 5)) (random 5)))))
     
     (set! c (update-seq-events seq-events c))
     (set! seq-events (process-seq-events seq-events c))
-    )
+    (set! frame (+ frame 1)))
 
 (every-frame (render))
