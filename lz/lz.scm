@@ -242,7 +242,7 @@
 	    ;;(msg (car now) " " (cadr now) " tick-real")
 	    ;;(msg (car future) " " (cadr future) " tick-future")
 	    ;; send to the AR
-	    (osc-send "osc.udp://192.168.0.20:8000" "/tick" "fii" (cons future-offset (lz-top (nz-lz nz))))		    
+	    (osc-send "osc.udp://10.42.0.6:8000" "/tick" "fii" (cons future-offset (lz-top (nz-lz nz))))		    
 	    
 	    (let ((t (lz-tick (nz-lz nz)))
 		  (v (car (nz-vals nz))))
