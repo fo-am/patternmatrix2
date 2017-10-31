@@ -57,24 +57,21 @@ def convert_symbols(s):
     return {tangible.convert_4bit_twist(v):k for k, v in s}
 
 symbols = [["1",[1,1,1,1]],["0",[0,0,0,0]],
-           ["1",[1,0,1,0]],["0",[0,1,0,1]],
-           ["1",[1,1,0,0]],["0",[0,1,1,0]],["1",[0,0,1,1]],["0",[1,0,0,1]],
-           ["1",[1,0,0,0]],["1",[0,1,0,0]],["1",[0,0,1,0]],["1",[0,0,0,1]],
+           ["0",[1,0,1,0]],["0",[0,1,0,1]],
+           ["0",[1,1,0,0]],["0",[0,1,1,0]],["0",[0,0,1,1]],["0",[1,0,0,1]],
+           ["0",[1,0,0,0]],["0",[0,1,0,0]],["0",[0,0,1,0]],["0",[0,0,0,1]],
            ["0",[0,1,1,1]],["0",[1,0,1,1]],["0",[1,1,0,1]],["0",[1,1,1,0]]]
 
 symbols = convert_symbols(symbols)
 
 def build_pattern(data,symbols):
     pat=[]
-    for i in range(0,4):
+    for i in range(0,5):
         s=""
-        c = 0
-        for v in data[i][:4]:
+        for v in data[i][:5]:
             s+=symbols[v]+" "
-            c+=1
-            if c%4==0: s+="0\n"
         pat.append(s)
-    return pat+["0 0 0 0 0\n"]
+    return pat
                 
 def send_pattern(pat):
     osc.Message("/eval",["(loom-update! loom (list \n"+pat+"))"]).sendlocal(8000)
@@ -113,7 +110,7 @@ while True:
     cc = pat[0]+pat[1]+pat[2]+pat[3]+pat[4]
     if cc!=last:
         last=cc    
-        print("   "+pat[0]+"   "+pat[1]+"   "+pat[2]+"   "+pat[3]+"   "+pat[4])
+        print("   "+pat[0]+"\n   "+pat[1]+"\n   "+pat[2]+"\n   "+pat[3]+"\n   "+pat[4]+"\n")
         send_pattern(cc)
 
     col=grid.state[24].value_current
