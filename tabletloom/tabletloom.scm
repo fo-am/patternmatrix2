@@ -64,8 +64,8 @@
   (cond 
    ((eq? thread 'x) (colour (vector 0.6 0.3 0.1)))
    ((eq? thread 'y) (colour (vector 1 1 1)))
-   ((eq? thread 'z) (colour (vector 1 0 1)))
-   ((eq? thread 'a) (colour (vector 1 1 0)))))
+   ((eq? thread 'z) (colour (vector 0.5 0 0)))
+   ((eq? thread 'a) (colour (vector 1 0.8 0)))))
 
 (define (build-coloured element-name threads)
   (with-state
@@ -127,105 +127,35 @@
 (define (rotate-list l)
   (append (cdr l) (list (car l))))
 
-;;(define instructions (list 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'ccw 'ccw 'ccw 'ccw 'ccw 'ccw 'ccw 'ccw))
-(define instructions (list 'cw 'cw 'cw 'cw 'ccw 'ccw 'ccw 'ccw 'cw 'cw 'cw 'cw 'ccw 'ccw 'ccw 'ccw))
-;(define instructions (list 'ccw 'ccw 'ccw 'ccw 'ccw 'ccw 'ccw 'ccw 'ccw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw))
-;(define instructions (list 'cw 'cw 'ccw 'ccw 'cw 'cw 'ccw 'ccw 'cw 'cw 'ccw 'ccw 'cw 'cw 'ccw 'ccw))
-;;(define instructions (list 'cw 'ccw 'cw 'ccw 'cw 'ccw 'cw 'ccw 'cw 'ccw 'cw 'ccw 'cw 'ccw 'cw 'ccw))
-
 (define thread 
-  '(
-; 1
-;    (x x y y) 
-;    (x x y y) 
-;    (x x y y) 
-;    (x x y y) 
-;    (x x y y) 
-;    (x x y y) 
-;    (x x y y) 
-;    (x x y y) 
+  '((z z a a)
+    (y x x y)
+    (x x y y)
+    (x y y x)
+    (y y x x)
+    (y x x y)
+    (x x y y)
+    (x y y x)
+    (y y x x)
+    (z z a a)))
 
-; 2
-;    (x x y y) 
-;    (y x x y)  
-;    (y y x x) 
-;    (x y y x) 
-;    (x x y y) 	
-;    (y x x y) 
-;    (y y x x) 
-;    (x y y x) 
-
-; 3
-;    (y x x y) 
-;    (y x x y) 
-;    (y x x y) 
-;    (y x x y) 
-;    (y x x y) 
-;    (y x x y) 
-;    (y x x y) 
-;    (y x x y) 
-
-(z z a a)
-(y y x x)
-(x y y x)
-(x x y y)
-(y x x y)
-
-(x y y x)
-(x x y y)
-(y x x y)
-(y y x x)
-
-(z z a a)
-
-    ))
-
-
-(define temp '())
-
-(define frame 51)
-(define frames-per-generate 50)
-(define pos 0)
-(define roots '())
-
-(define (render-me)
-  ;(with-primitive 
-  ; root 
-   ;;(translate (vector (* -0.98 (/ 1 frames-per-generate)) 0 0)))
-
-  (when (> frame frames-per-generate)
-	(set! pos (+ pos 1))
-	;;(set! frame 0)
-	
-	;(set! instructions (rotate-list instructions))
-	;(msg instructions)
-	(destroy root)
-	(set! root (build-locator))
-
-	
-	(with-state
-	 (parent root)
-	 (rotate (vector 20 45 180))
-	 (translate (vector -8 0 0))
-	 (scale (vector 0.5 0.5 0.5))
-	 
-	 (set! temp 
-	       (weave
-		instructions
-		thread
-		'(right right right right right
-		  left left left left left
-		  )))
-	 (msg (cdr temp))
-
-	 (weave-render temp)
-	 ;;(set! thread (car (cadr temp)))
-	 ;(msg thread)
-	 ))
-  
-  ;(set! frame (+ frame 1))
-  )
-
+(define (weave-instructions instructions)
+  (destroy root)
+  (set! root (build-locator))
+    
+  (with-state
+   (parent root)
+   (rotate (vector 40 0 0))
+   (translate (vector -15 0 -15))
+   
+   (let ((w 
+	  (weave
+	   instructions
+	   thread
+	   '(right right right right right right right right right right))))
+     ;;(msg (cdr temp))
+   
+     (weave-render w))))
 
 (clear-colour (vector 1 1 1))
 
@@ -236,9 +166,7 @@
  (rotate (vector 0 0 0))
  (translate (vector 0 0 15)))
 
-;;(render-me)
-
-(every-frame (render-me))
+(weave-instructions (list 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw 'cw))
 
 ;;(every-frame (with-primitive root (rotate (vector 0 0.3 0))))
 

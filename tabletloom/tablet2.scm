@@ -47,21 +47,68 @@
     (cons (weave-unit direction (car threads) (list-wrap-ref orientation n))
           (weave-tablet direction (cdr threads) orientation (+ n 1))))))
 
+(define (flip-orientation o)
+  (if (eq? o 'left) 'right 'left))
+
+(define (index-map fn l)
+  (define (_ i l)
+    (cond
+     ((null? l) '())
+     (else
+      (cons (fn i (car l)) (_ (+ i 1) (cdr l))))))
+  (_ 0 l))
+
+(define (instruction->orientation orientation instruction)
+  (cond
+   ((eq? instruction 'flip-all)
+    (map flip-orientation orientation))
+   ((eq? instruction 'flip-even)
+    (index-map (lambda (i o) (if (zero? (modulo i 2)) (flip-orientation o) o))
+	       orientation))
+   ((eq? instruction 'flip-odd)
+    (index-map (lambda (i o) (if (not (zero? (modulo i 2))) (flip-orientation o) o))
+	       orientation))
+   ((eq? instruction 'flip-fhalf)
+    (index-map (lambda (i o) (if (< i (/ (length orientation) 2)) (flip-orientation o) o))
+	       orientation))
+   ((eq? instruction 'flip-shalf)
+    (index-map (lambda (i o) (if (> i (/ (length orientation) 2)) (flip-orientation o) o))
+	       orientation))
+   (else orientation)))
+
 (define (instructions->structure instructions threads orientation)
   (cond
    ((null? instructions) '())
    (else
-    (let ((new-threads (rotate-threads threads (car instructions) orientation)))
-      (cons (weave-tablet (car instructions) threads orientation 0)
-            (instructions->structure (cdr instructions) new-threads orientation))))))
+    (cond ;; weave instruction
+     ((or (eq? (car instructions) 'cw)
+	  (eq? (car instructions) 'ccw))
+      (let ((new-threads (rotate-threads threads (car instructions) orientation)))
+	(cons (weave-tablet (car instructions) threads orientation 0)
+	      (instructions->structure (cdr instructions) new-threads orientation))))
+     (else ;; flip instruction
+      (instructions->structure
+       (cdr instructions) threads
+       (instruction->orientation
+	orientation
+	(car instructions))))))))
 
 (define (instructions->thread instructions threads orientation)
   (cond
    ((null? instructions) '())
    (else
-    (let ((new-threads (rotate-threads threads (car instructions) orientation)))
-      (cons new-threads
-	    (instructions->thread (cdr instructions) new-threads orientation))))))
+    (cond ;; weave instruction
+     ((or (eq? (car instructions) 'cw)
+	  (eq? (car instructions) 'ccw))
+      (let ((new-threads (rotate-threads threads (car instructions) orientation)))
+	(cons new-threads
+	      (instructions->thread (cdr instructions) new-threads orientation))))
+     (else ;; flip instruction
+      (instructions->thread
+       (cdr instructions) threads
+       (instruction->orientation
+	orientation
+	(car instructions))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; broken version
