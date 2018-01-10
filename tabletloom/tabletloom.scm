@@ -1,6 +1,5 @@
 (load "tablet2.scm")
 
-
 (define (load-threads name)
   (with-state
    (translate (vector -1000 0 0))
@@ -226,6 +225,7 @@
   
   ;(set! frame (+ frame 1))
   )
+
 
 (clear-colour (vector 1 1 1))
 
