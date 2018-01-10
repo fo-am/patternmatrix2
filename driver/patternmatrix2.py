@@ -121,7 +121,7 @@ osc.Message("/eval",["(set-scale pentatonic-minor)"]).sendlocal(8000)
 
 def send_ar(pat):
     try:
-        osc.Message("/matrix",[pat]).sendto("192.168.0.20",8000)
+        osc.Message("/matrix",[pat]).sendto("10.42.0.6",8000)
     except Exception:
         pass
 

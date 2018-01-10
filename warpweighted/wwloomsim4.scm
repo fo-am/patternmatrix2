@@ -23,17 +23,17 @@
 (define warp-yarn-d (list yarn-d yarn-d))
 (define weft-yarn-d (list yarn-d yarn-b))
 
-(define warp-yarn-e (list yarn-a yarn-a yarn-c yarn-c))
-(define weft-yarn-e (list yarn-c yarn-a))
+(define warp-yarn-e (list yarn-d yarn-b yarn-d yarn-d yarn-d))
+(define weft-yarn-e (list yarn-b yarn-b))
 
 (define warp-yarn-f (list yarn-b yarn-b yarn-c))
 (define weft-yarn-f (list yarn-b yarn-c))
 
-(define warp-yarn-g (list yarn-b yarn-a yarn-a yarn-c))
+(define warp-yarn-g (list yarn-b yarn-c yarn-b yarn-b yarn-b))
 (define weft-yarn-g (list yarn-b yarn-c))
 
-(define warp-yarn-h (list yarn-c yarn-c yarn-b))
-(define weft-yarn-h (list yarn-d yarn-b))
+(define warp-yarn-h (list yarn-c yarn-b yarn-c yarn-c yarn-b))
+(define weft-yarn-h (list yarn-c yarn-b))
 
 
 (define speed 60)
@@ -234,9 +234,14 @@
 (set-scale (list 2 2 1 1 1 2))
 
 (define (loom-update-wefts loom)
-  (play-now (mul (adsr 0.1 0.05 0.2 2)
-		 (mul (sine (note (* draft-pos 2)))
-		      (sine (note (+ 5 (* draft-pos 2)))))) 0)
+  (if (eq? draft-size 5)
+      (play-now (mul (adsr 0.1 0.05 0.2 2)
+		     (add (sine (note (* draft-pos 2)))
+			  (sine (* 1.33333 (note (* draft-pos 2)))))) 0)
+      (let ((p (modulo (- draft-pos 1) 5)))
+	(play-now (mul (adsr 0.1 0.05 0.2 2)
+		       (add (sine (note (* p 2)))
+			    (sine (* 1.33333 (note (* p 2)))))) 0)))
   (define i 0)
   (for-each
    (lambda (weft)

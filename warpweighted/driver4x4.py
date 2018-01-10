@@ -7,9 +7,7 @@ import sev_seg
 
 bus = smbus.SMBus(1)
 
-mcp = [0x20,0x21,0x22,0x23,0x24,0x25,0x26]
-
-debug_mcp = 0x25
+mcp = [0x20,0x21,0x22,0x23]
 
 # sensor orientation
 dn = 0
@@ -17,12 +15,11 @@ up = 1
 lr = 2
 rl = 3
 
-layout = [[0x26,3,rl], [0x20,0,up], [0x20,1,up], [0x20,2,up], [0x20,3,up], 
-          [0x26,2,rl], [0x21,3,dn], [0x21,2,dn], [0x21,1,dn], [0x21,0,dn],
-          [0x26,1,rl], [0x22,0,up], [0x22,1,up], [0x22,2,up], [0x22,3,up],
-          [0x26,0,dn], [0x23,3,dn], [0x23,2,dn], [0x23,1,dn], [0x23,0,dn],
-          [0x24,3,lr], [0x24,2,lr], [0x24,1,lr], [0x24,0,lr], [0x25,0,lr]]
- 
+layout = [[0x20,0,rl], [0x20,1,rl], [0x20,2,rl], [0x20,3,rl], 
+          [0x21,0,dn], [0x21,1,dn], [0x21,2,dn], [0x21,3,dn],
+          [0x22,0,rl], [0x22,1,rl], [0x22,2,rl], [0x22,3,rl],
+          [0x23,0,dn], [0x23,1,dn], [0x23,2,dn], [0x23,3,dn]]
+    
 tokens = {"circle":    [[0,0,0,0],[1,1,1,1]],
 
           "rectangle": [[0,1,
@@ -43,10 +40,7 @@ tokens = {"circle":    [[0,0,0,0],[1,1,1,1]],
                         [1,1,1,0],[1,1,0,1],[1,0,1,1],[0,1,1,1]]}
 
 for address in mcp:
-    if address==debug_mcp:
-        sev_seg.init(bus,address)
-    else:
-        mcp23017.init_mcp(bus,address)
+    mcp23017.init_mcp(bus,address)
 
 grid = tangible.sensor_grid(25,layout,tokens)
 
@@ -66,12 +60,12 @@ symbols = convert_symbols(symbols)
 
 def build_pattern(data,symbols):
     pat=[]
-    for i in range(0,5):
+    for i in range(0,4):
         s=""
-        for v in data[i][:5]:
+        for v in data[i][:4]:
             s+=symbols[v]+" "
-        pat.append(s)
-    return pat
+        pat.append(s+"0 ")
+    return pat+["0 0 0 0 0"]
                 
 def send_pattern(pat):
     osc.Message("/eval",["(loom-update! loom (list \n"+pat+"))"]).sendlocal(8000)
@@ -84,16 +78,6 @@ def send_col(col):
                          "(set-weft-yarn! loom weft-yarn-"+col+")"]).sendlocal(8000)
 
 flip = 1
-
-def update_debug(pat):
-    #print(pat)
-    global flip
-    if flip==1: flip=0
-    else: flip=1
-
-    sev_seg.write(bus,debug_mcp,[pat[0],pat[1],0,0,0,pat[3],pat[2],flip])
-
-    
 osc.Message("/eval",["(set-scale pentatonic-minor)"]).sendlocal(8000)
 
 #######################################################
@@ -106,14 +90,16 @@ while True:
         grid.update(frequency,address,
                     mcp23017.read_inputs_a(bus,address),
                     mcp23017.read_inputs_b(bus,address))
-    pat = build_pattern(grid.data(5),symbols)
+    pat = build_pattern(grid.data(4),symbols)
     cc = pat[0]+pat[1]+pat[2]+pat[3]+pat[4]
     if cc!=last:
         last=cc    
         print("   "+pat[0]+"\n   "+pat[1]+"\n   "+pat[2]+"\n   "+pat[3]+"\n   "+pat[4]+"\n")
         send_pattern(cc)
 
-    col=grid.state[24].value_current
+    #print(grid.last_debug)
+        
+    col=grid.state[15].value_current
     if col!=last_col:
         last_col=col
         if col==1: send_col("a")
@@ -128,7 +114,6 @@ while True:
         #grid.pprint(5)
     time.sleep(frequency)
 
-    update_debug(grid.last_debug)
 
 
 
