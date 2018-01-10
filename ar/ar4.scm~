@@ -159,15 +159,17 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define font "fonts/Inconsolata.otf")
+;(define font "fonts/Inconsolata.otf")
+;(define font "fonts/LINEAR-B.TTF")
+(define font "fonts/LA.ttf")
 
 (define (build-text-prim text)
     (let* ((p (build-extruded-type font text 1)))
         (with-primitive 
             p
-            (backfacecull 0)
+            (backfacecull 1)
             ;;(hint-none)
-            (hint-wire)
+            ;(hint-wire)
             (colour (vector 1 0.2 0.5))
             (line-width 1)
             (wire-colour (vector 1 0.2 0.5))

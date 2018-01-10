@@ -2,7 +2,7 @@
 ;; weavecoding raspberry pi installation
 (synth-init "fluxa" 2 44100 2048 20)
 
-(clear-colour (vector 1 1 1))
+(clear-colour (vector 0 0 0))
 
 (define weave-scale (vector 0.4 -0.4 0.4))
 
@@ -279,6 +279,19 @@
    0 0 1 0 0
    0 1 0 0 0
    1 0 0 0 0))
+
+(set-warp-yarn! loom warp-yarn-c)
+(set-weft-yarn! loom weft-yarn-c)
+(set! draft-size 4)
+
+(define start-pattern
+  (list
+   0 0 1 1 0
+   0 1 1 0 0
+   1 1 0 1 0
+   1 0 1 1 1
+   0 0 0 1 0))
+
 
 (every-frame
  (set! count-down (- count-down 1))
