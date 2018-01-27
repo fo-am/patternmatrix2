@@ -1,22 +1,23 @@
 ### Pattern matrix 4x4 v3 manual
 
-This version comprises warp weighted and tablet weaving and a new web
-control panel that can be used via laptop or phones via wifi
-connection (it uses it's own local network no internet connectivity is
-required).
+This version comprises both warp weighted mode and an experimental
+tablet weaving mode and a new web control panel that can be used via
+wifi on a laptop or phone (it uses it's own local network no internet
+connectivity is required).
 
 ![](https://github.com/Kairotic/patternmatrix2/raw/master/manual/images/pic.jpg)
 
 On startup the warp weighted loom mode activates with a 4x4
-matrix. The same controls and block works as before for colour, but
-there is no special 'shutdown' token any more.
+matrix. The circular blocks operate digital control and the square one
+controls the the yarn colour pattern. (There is no special 'shutdown'
+token any more.)
 
 ## Web control panel
 
 Connect via wifi to `patternmatrix` password: `penelopeundo`
 
-Once connected visit this URL: `http://10.42.0.1/`. You should see a
-web page in your browser like this:
+Once connected visit this URL: [http://10.42.0.1/](http://10.42.0.1/). 
+You should see a web page in your browser like this:
 
 ![](https://github.com/Kairotic/patternmatrix2/raw/master/manual/images/web.png)
 
