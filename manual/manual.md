@@ -27,10 +27,11 @@ able to reach the internet.
 
 ## Putting it together
 
-The sensor rows slot on top of the edge bars. The Raspberry Pi shelf
-needs to be slotted into the top two with the large opening outwards
-so power and HDMI cables can be plugged in. The two poles are inserted
-to lock everything in place. 
+The two pairs of sensor rows are connected together via the power
+cables (be careful when unpacking). The Raspberry Pi shelf needs to be
+slotted into the top two with the large opening outwards so power and
+HDMI cables can be plugged in. The two poles are inserted to lock
+everything in place.
 
 ## Connections
 
