@@ -17,6 +17,23 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-supervise /home/pi/code/patternmatrix2/driver &
+# clear the screen
+printf '\033c'
+
+python /home/pi/code/patternmatrix2/controlpanel/server.py &
+
+cd /home/pi/code/patternmatrix2/warpweighted
+
+eval `dbus-launch --auto-syntax`
+sleep 2
+export DBUS_SESSION_BUS_PID DBUS_SESSION_BUS_ADDRESS
+sleep 2
+export DISPLAY=:0.0
+sleep 2
+jackd -p32 -dalsa -dhw:1,0 -p2048 -n3 -s -r44100 &
+sleep 2
+
+python driver4x4.py &
+jellyfish wwloomsim4.scm &
 
 exit 0
