@@ -14,7 +14,9 @@ there is no special 'shutdown' token any more.
 ## Web control panel
 
 Connect via wifi to `patternmatrix` password: `penelopeundo`
-Visit this URL: `http://10.42.0.1/`
+
+Once connected visit this URL: `http://10.42.0.1/`. You should see a
+web page in your browser like this:
 
 ![](https://github.com/Kairotic/patternmatrix2/raw/master/manual/images/web.png)
 
