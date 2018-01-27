@@ -1,4 +1,4 @@
-### Pattern matrix 4x4 v3 manual
+#### Pattern Matrix Tangible Weavecoding manual (4X4 v3.0)
 
 This version comprises both warp weighted mode and an experimental
 tablet weaving mode and a new web control panel that can be used via
@@ -25,19 +25,27 @@ From here you can remotely switch loom types and shutdown or restart
 the Pi. Note: while connected to the pattern matrix, you will not be
 able to reach the internet.
 
+## Putting it together
+
+The sensor rows slot on top of the edge bars. The Raspberry Pi shelf
+needs to be slotted into the top two with the large opening outwards
+so power and HDMI cables can be plugged in. The two poles are inserted
+to lock everything in place. 
+
 ## Connections
 
 Overall picture – the Raspberry Pi connects to the two “row
 controller” boards via a 4 way ribbon cable. Each “row controller”
 supplies power to it's 8 sensor boards via a 2 way ribbon cable and
 reads the sensor data via the large 16 way ribbon cable that plugs
-into each sensor.
+into each sensor. 
 
 ![](https://github.com/Kairotic/patternmatrix2/raw/master/manual/images/overall.jpg)
 
 The connectors on the sensor end are left plugged in, but the other
-ends need connecting to the row controllers. Blobs of grey nail
-varnish indicate the side of the plug that should be facing up:
+ends need connecting to the row controllers. This can be easier to do
+by turning the pattern matrix upside down. Blobs of grey nail varnish
+indicate the side of the plug that should be facing up:
 
 ![](https://github.com/Kairotic/patternmatrix2/raw/master/manual/images/connecting.jpg)
 
