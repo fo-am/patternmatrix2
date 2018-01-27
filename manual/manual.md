@@ -1,4 +1,4 @@
-#### Pattern Matrix Tangible Weavecoding manual (4X4 v3.0)
+# Pattern Matrix Tangible Weavecoding manual (4X4 v3.0)
 
 This version comprises both warp weighted mode and an experimental
 tablet weaving mode and a new web control panel that can be used via
