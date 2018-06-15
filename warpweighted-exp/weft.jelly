@@ -1,0 +1,182 @@
+;; -*- mode: scheme; -*-
+(let ((vertex positions-start)
+      (t 0)
+      (v 0)
+      (weft-direction (vector 2 0 0))
+      (weft-position (vector -22 0 0))
+      (weft-seq 0)
+      (draft-pos 0)
+      (weft-id -1)
+      (weft-z (vector 0 0 0))
+      (weft-count 0)
+      (weft-total 22)
+      (draft-size 5)
+      (weaving 0)
+      (last-weft-seq -1)
+      (selvedge-gap (vector 0 4.5 0))
+      (draft 0) (d-01 0) (d-02 0) (d-03 0) (d-04 0)
+      (d-05 0) (d-06 0) (d-07 0) (d-08 0) (d-09 0) 
+      (d-10 0) (d-11 0) (d-12 0) (d-13 0) (d-14 0) 
+      (d-15 0) (d-16 0) (d-17 0) (d-18 0) (d-19 0) 
+      (d-20 0) (d-21 0) (d-22 0) (d-23 0) (d-24 0) 
+      (d-25 0) (d-26 0) (d-27 0) (d-28 0) (d-29 0)
+      (d-30 0) (d-31 0) (d-32 0) (d-33 0) (d-34 0) 
+      (d-35 0) (d-36 0) (d-37 0) (d-38 0) (d-39 0) 
+      (d-40 0) (d-41 0) (d-42 0) (d-43 0) (d-44 0) 
+      (d-45 0) (d-46 0) (d-47 0) (d-48 0) (d-49 0) 
+      (d-50 0) (d-51 0) (d-52 0) (d-53 0) (d-54 0) 
+      (d-55 0) (d-56 0) (d-57 0) (d-58 0) (d-59 0) 
+      (d-60 0) (d-61 0) (d-62 0) (d-63 0)
+      ) 
+
+  ;(trace (addr selvedge-gap))
+
+  (define read-draft
+    (lambda ()
+      (read
+       (+ (addr draft)
+          (+ (* draft-pos draft-size)
+             (modulo (if (> weft-direction 0)
+                         (+ weft-count 1)
+                         (- (- weft-total 1) weft-count))
+                     (+ draft-size (vector 0 1 1))))))))
+
+     (define calc-weft-z
+       (lambda ()
+         (set! weft-z
+               (if (> (read-draft) 0.5)
+                   (vector 0 0 0.01)
+                   (vector 0 0 -0.01)))
+         (set! weft-count (+ weft-count 1))))
+
+
+     (define right-selvedge
+       (lambda (gap)
+         ;; top corner
+         (write! vertex
+                 (- (+ weft-position (vector 2 0 0)) gap)
+                 (- (+ weft-position (vector 2.975 0.325 0)) gap)
+                 (- (+ weft-position (vector 2 1 0)) gap))
+         (set! vertex (+ vertex 3))
+         (write! vertex
+                 (- (+ weft-position (vector 2.975 0.325 0)) gap)
+                 (- (+ weft-position (vector 3.3 1 0)) gap)
+                 (- (+ weft-position (vector 2 1 0)) gap))
+         ;; fudge the tex
+         (write! (+ (- vertex positions-start) texture-start)
+                 (vector 0 1 0)
+                 (vector 0 1 0)
+                 (vector 0 0 0))
+         (set! vertex (+ vertex 3))
+         ;; vertical connection
+         (write! vertex
+                 (+ weft-position (vector 2 0 0))
+                 (- (+ weft-position (vector 3.3 1 0)) gap)
+                 (- (+ weft-position (vector 2 1 0)) gap)
+                 (+ weft-position (vector 2 0 0))
+                 (+ weft-position (vector 3.3 0 0))
+                 (- (+ weft-position (vector 3.3 1 0)) gap))
+         (set! vertex (+ vertex 6))
+         ;; bottom corner
+         (write! vertex
+                 (+ weft-position (vector 3.3 0 0))
+                 (+ weft-position (vector 2 0 0))
+                 (+ weft-position (vector 2.975 0.975 0)))
+         ;; fudge the tex
+         (write! (+ (- vertex positions-start) texture-start)
+                 (vector 0 1 0)
+                 (vector 0 0 0)
+                 (vector 0 1 0))
+         (set! vertex (+ vertex 3))
+         (write! vertex
+                 (+ weft-position (vector 2 0 0))
+                 (+ weft-position (vector 2 1.3 0))
+                 (+ weft-position (vector 2.975 0.975 0)))
+         (set! vertex (+ vertex 3))
+         ))
+
+     (define left-selvedge
+       (lambda (gap)
+         ;; top corner
+         (write! vertex
+                 (- (+ weft-position (vector -1.3 1.3 0)) gap)
+                 (- (+ weft-position (vector 0 1.3 0)) gap)
+                 (- (+ weft-position (vector -0.975 0.325 0)) gap))
+         (set! vertex (+ vertex 3))
+         (write! vertex
+                 (- (+ weft-position (vector -0.975 0.325 0)) gap)
+                 (- (+ weft-position (vector 0 1.3 0)) gap)
+                 (- (+ weft-position (vector 0 0 0)) gap))
+         ;; fudge the tex
+         (write! (+ (- vertex positions-start) texture-start)
+                 (vector 0 0 0)
+                 (vector 0 1 0)
+                 (vector 0 0 0))
+         (set! vertex (+ vertex 3))
+         ;; vertical connection
+         (write! vertex
+                 (- (+ weft-position (vector -1.3 1 0)) gap)
+                 (+ weft-position (vector 0 0 0))
+                 (+ weft-position (vector -1.3 0 0))
+                 (- (+ weft-position (vector -1.3 1 0)) gap)
+                 (- (+ weft-position (vector 0 1 0)) gap)
+                 (+ weft-position (vector 0 0 0)))
+         (set! vertex (+ vertex 6))
+         ;; bottom corner
+         (write! vertex
+                 (+ weft-position (vector -0.975 0.975 0))
+                 (+ weft-position (vector 0 0 0))
+                 (+ weft-position (vector -1.3 0 0)))
+         ;; fudge the tex
+         (write! (+ (- vertex positions-start) texture-start)
+                 (vector 0 0.5 0)
+                 (vector 0 1 0)
+                 (vector 0 0 0))
+         (set! vertex (+ vertex 3))
+         (write! vertex
+                 (+ weft-position (vector -0.975 0.975 0))
+                 (+ weft-position (vector 0 0 0))
+                 (+ weft-position (vector 0 1.3 0)))
+         ;; fudge the tex
+         (write! (+ (- vertex positions-start) texture-start)
+                 (vector 0 0.5 0)
+                 (vector 0 0.5 0)
+                 (vector 0 1 0))
+         (set! vertex (+ vertex 3))
+         ))
+
+     (forever
+      (set! vertex positions-start)
+      (loop (< vertex (+ positions-start 1002))
+            (when (not (eq? weft-seq last-weft-seq))
+                  (set! last-weft-seq weft-seq)
+                  (when (eq? weft-seq weft-id)
+                        (set! weaving 1)))
+
+            (when (eq? weaving 1)
+                  (calc-weft-z)
+                  (set! weft-position (+ weft-position weft-direction))
+
+                  ;; selvedge time?
+                  (cond
+                   ((> weft-count weft-total)
+                    (set! weft-count 0)
+                    (set! weft-position (- (+ weft-position selvedge-gap)
+                                           weft-direction))
+                    (set! weft-direction (* weft-direction -1))
+                    (if (> 0 weft-direction)
+                        (right-selvedge selvedge-gap)
+                        (left-selvedge selvedge-gap))
+                    (set! weaving 0)
+                    (set! weft-position (- weft-position weft-direction)))
+                   (else
+                    (write! vertex
+                            (+ weft-z weft-position)
+                            (+ weft-position (+ weft-z (vector 2 1.3 0)))
+                            (+ weft-position (+ weft-z (vector 2 0 0)))
+                            (+ weft-z weft-position)
+                            (+ weft-position (+ weft-z (vector 2 1.3 0)))
+                            (+ weft-position (+ weft-z (vector 0 1.3 0))))
+                    (set! vertex (+ vertex 6)))))
+            ;;(set! t (+ t 0.01))
+            )))
