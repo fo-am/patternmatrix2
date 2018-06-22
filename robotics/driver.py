@@ -6,7 +6,7 @@ import nrf
 
 bus = smbus.SMBus(1)
 
-mcp = [0x20,0x21,0x22,0x23,0x24,0x25,0x26]
+mcp = [0x20,0x21,0x22,0x23]
 
 # sensor orientation
 dn = 0
@@ -48,7 +48,7 @@ tokens = {"circle":    [[0,0,0,0],[1,1,1,1]],
 for address in mcp:
     mcp23017.init_mcp(bus,address)
 
-grid = tangible.sensor_grid(25,layout55,tokens)
+grid = tangible.sensor_grid(16,layout44,tokens)
 
 frequency=0.1
 
@@ -57,10 +57,10 @@ def convert_symbols(s):
     return {tangible.convert_4bit_twist(v):k for k, v in s}
 
 symbols = [["0",[1,1,1,1]],["0",[0,0,0,0]],
-           ["A",[1,0,1,0]],["a",[0,1,0,1]],
+           ["B",[1,0,1,0]],["b",[0,1,0,1]],
            ["0",[1,1,0,0]],["0",[0,1,1,0]],["0",[0,0,1,1]],["0",[1,0,0,1]],
-           ["0",[1,0,0,0]],["0",[0,1,0,0]],["0",[0,0,1,0]],["0",[0,0,0,1]],
-           ["0",[0,1,1,1]],["0",[1,0,1,1]],["0",[1,1,0,1]],["0",[1,1,1,0]]]
+           ["a",[1,0,0,0]],["b",[0,1,0,0]],["a",[0,0,1,0]],["b",[0,0,0,1]],
+           ["A",[0,1,1,1]],["B",[1,0,1,1]],["A",[1,1,0,1]],["B",[1,1,1,0]]]
 
 symbols = convert_symbols(symbols)
 
@@ -68,17 +68,19 @@ def build_pattern(data,symbols):
     pat=[]
     for i in range(0,4):
         s=""
-        for v in data[i][:5]:
+        for v in data[i][:4]:
             s+=symbols[v]
         pat.append(s)
     return pat
-                
+
+glob_speed = 50
+
 def send_pattern(radio,a,b,c,d):
-    nrf.write_pattern(radio,0,50,4,a+"000000000000000000000")
+    nrf.write_pattern(radio,0,glob_speed,4,a+"0000000000000000000000")
     time.sleep(0.1)
-    nrf.write_pattern(radio,0,50,4,b+"000000000000000000000")
+    nrf.write_pattern(radio,1,glob_speed,4,b+"0000000000000000000000")
     time.sleep(0.1)
-    nrf.write_pattern(radio,0,50,4,c+"000000000000000000000")
+    nrf.write_pattern(radio,2,glob_speed,4,c+"0000000000000000000000")
 
 
 #######################################################
@@ -93,11 +95,11 @@ while True:
         grid.update(frequency,address,
                     mcp23017.read_inputs_a(bus,address),
                     mcp23017.read_inputs_b(bus,address))
-    pat = build_pattern(grid.data(5),symbols)
+    pat = build_pattern(grid.data(4),symbols)
     cc = pat[0]+pat[1]+pat[2]+pat[3]
     if cc!=last:
         last=cc    
-        print("   "+pat[0]+pat[1]+pat[2]+pat[3]+"\n")
+        print("   "+pat[0]+" "+pat[1]+" "+pat[2]+"\n")
         send_pattern(radio,pat[0],pat[1],pat[2],pat[3])
         
     time.sleep(frequency)

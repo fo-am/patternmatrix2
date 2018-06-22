@@ -22,7 +22,7 @@ radio.setRetries(15,15)
 radio.setPayloadSize(32)
 radio.setChannel(100)
 radio.write_register(NRF24.FEATURE, 0)
-radio.setPALevel(NRF24.PA_MIN)
+radio.setPALevel(NRF24.PA_MAX)
 radio.setAutoAck(False)
 
 radio.openWritingPipe(pipes[1])
