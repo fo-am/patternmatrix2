@@ -32,15 +32,13 @@ def start_radio():
     radio.printDetails()
     return radio
 
-def write_pattern(radio,id,speed,length,pat):
-    if len(pat)!=26:
-        print(pat+" is wrong length")
-        return
-    servo_id = id
-    servo_speed = speed
-    servo_length = length
-    servo_pattern = pat    
-    dat = struct.pack("cBHH", 'M', servo_id, servo_speed, servo_length)+servo_pattern
+def write_pattern(radio,speed,length,smoothing,pat):
+    dat = struct.pack("cBHH", 'M', 0, speed, length)+pat
+    print("sending "+str(len(dat)))
+    radio.write(dat)
+
+def write_sync(radio):
+    dat = struct.pack("c", 'S');
     radio.write(dat)
 
 
