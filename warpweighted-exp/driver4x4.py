@@ -42,7 +42,7 @@ tokens = {"circle":    [[0,0,0,0],[1,1,1,1]],
 for address in mcp:
     mcp23017.init_mcp(bus,address)
 
-grid = tangible.sensor_grid(25,layout,tokens)
+grid = tangible.sensor_grid(16,layout,tokens)
 
 frequency=0.1
 
@@ -90,12 +90,11 @@ while True:
         grid.update(frequency,address,
                     mcp23017.read_inputs_a(bus,address),
                     mcp23017.read_inputs_b(bus,address))
-    pat = build_pattern(grid.data(4),symbols)
-    cc = pat[0]+pat[1]+pat[2]+pat[3]+pat[4]
-    if cc!=last:
-        last=cc    
-        print("   "+pat[0]+"\n   "+pat[1]+"\n   "+pat[2]+"\n   "+pat[3]+"\n   "+pat[4]+"\n")
-        send_pattern(cc)
+    pat = grid.big_matrix(4)
+    if pat!=last:
+        last=pat    
+        print(pat)
+        send_pattern(pat)
 
     #print(grid.last_debug)
         

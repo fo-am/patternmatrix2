@@ -11,8 +11,8 @@
 (define yarn-c (vector 0.8 0.2 0.1))
 (define yarn-d (vector 0.3 0.3 1.0))
 
-(define warp-yarn-a (list yarn-a yarn-b))
-(define weft-yarn-a (list yarn-a yarn-b))
+(define warp-yarn-a (list yarn-b yarn-b))
+(define weft-yarn-a (list yarn-d yarn-d))
 
 (define warp-yarn-b (list yarn-d yarn-b))
 (define weft-yarn-b (list yarn-d yarn-b))

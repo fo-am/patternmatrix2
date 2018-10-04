@@ -1,6 +1,7 @@
 LICENSE.txt
 MANIFEST.in
 README.rst
+setup.cfg
 setup.py
 python_osc.egg-info/PKG-INFO
 python_osc.egg-info/SOURCES.txt

@@ -148,3 +148,16 @@ class sensor_grid:
                 s+="\n"
             row+=1
         print(s)
+
+    def big_matrix(self,width):
+        s=""
+        for y in range(0,width):
+            for x in range(0,width):
+                data=convert_arr(self.state[y*width+x].value_current)
+                s+=str(data[2])+" "+str(data[3])+" "
+            s+="\n"
+            for x in range(0,width):
+                data=convert_arr(self.state[y*width+x].value_current)
+                s+=str(data[1])+" "+str(data[0])+" "
+            s+="\n"
+        return s
