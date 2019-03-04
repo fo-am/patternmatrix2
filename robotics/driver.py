@@ -3,8 +3,29 @@ import time
 import mcp23017
 import tangible
 import nrf
+from OSC import OSCServer
+
+#########################
+
+server = OSCServer( ("localhost", 4000) )
+server.timeout = 0
+
+def sync_callback(path, tags, args, source):
+    print("got sync")
+
+server.addMsgHandler( "/sync", sync_callback )
+
+def server_update():
+    # clear timed_out flag
+    server.timed_out = False
+    # handle all pending requests then return
+    while not server.timed_out:
+        server.handle_request()
+
+##########################
 
 bus = smbus.SMBus(1)
+
 
 mcp = [0x20,0x21,0x22,0x23]
 
@@ -137,6 +158,7 @@ while True:
     if sync_count==10*4:
         sync_count=0;
     sync_count+=1
+    server_update()
     
     time.sleep(frequency)
 
