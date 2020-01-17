@@ -1,56 +1,44 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/eeprom.h>
+//#include <avr/eeprom.h>
 #include <util/delay_basic.h>
+#include <util/delay.h>
 #include "usiTwiSlave.h"
 
-#define LED PB1
-uint8_t EEMEM i2c_addr = 0x26;
+#define SENSOR_A PB4
+#define SENSOR_B PB1
+#define SENSOR_C PB5 // reset
+#define SENSOR_D PB3
 
-// Somewhere to store the values the master writes to i2c register 2 and 3.
-static volatile uint8_t i2cReg2 = 0;
-static volatile uint8_t i2cReg3 = 0;
+// tried all sorts of nonsense to make i2c addresses writable so
+// we can build different configurations of pattern matrix, but they
+// are just to susceptable to noise - so hardcoding em for now...
+#define I2C_ADDR 0x10
 
-// A callback triggered when the i2c master attempts to read from a register.
-uint8_t i2cReadFromRegister(uint8_t reg) {
+uint8_t counter=0;
+
+uint8_t i2c_read(uint8_t reg) {
   switch (reg) {
-  case 0: 
-    return eeprom_read_byte(&i2c_addr);
-  case 1:
-    return 99;
+  case 0: return (PINB&_BV(SENSOR_A))!=0;
+  case 1: return (PINB&_BV(SENSOR_B))!=0;
+  case 2: return (PINB&_BV(SENSOR_C))!=0;
+  case 3: return (PINB&_BV(SENSOR_D))!=0; 
+  case 4: return counter++; 
+  case 5: return I2C_ADDR; 
   default:
     return 0xff;
   }
 }
 
-// A callback triggered when the i2c master attempts to write to a register.
-void i2cWriteToRegister(uint8_t reg, uint8_t value) {
-  switch (reg) {
-  case 0:
-    eeprom_update_byte(&i2c_addr,value);
-    break;
-  case 2: 
-    i2cReg2 = value;
-    break;
-  case 3:
-    i2cReg3 = value;
-    break;
-  }
-}
+void i2c_write(uint8_t reg, uint8_t value) {}
 
 int main() {
-  // Set the LED pin as output.
-  DDRB |= (1 << LED);  
-  usiTwiSlaveInit(eeprom_read_byte(&i2c_addr), i2cReadFromRegister, i2cWriteToRegister);
+  DDRB = 0x00; // all inputs
+  usiTwiSlaveInit(I2C_ADDR, i2c_read, i2c_write);
   sei();
   
   while (1) {
-    // This is a pretty pointless example which allows me to test writing to two i2c registers: the
-    // LED is only lit if both registers have the same value.
-    if (i2cReg2 == i2cReg3)
-      PORTB |= 1 << LED;
-    else
-      PORTB &= ~(1 << LED);
+    _delay_ms(1000);    
   }
 }
 
