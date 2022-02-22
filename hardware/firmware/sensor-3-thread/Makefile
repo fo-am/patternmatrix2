@@ -151,10 +151,10 @@ AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
 #AVRDUDE_WRITE_FUSE = -U lfuse:w:0x62:m -U hfuse:w:0xDF:m -U efuse:w:0xFF:m
 
 # 8Mhz
-#AVRDUDE_WRITE_FUSE = -U lfuse:w:0xe2:m -U hfuse:w:0xDF:m -U efuse:w:0xFF:m
+AVRDUDE_WRITE_FUSE = -U lfuse:w:0xe2:m -U hfuse:w:0xDF:m -U efuse:w:0xFF:m
 
 # 8Mhz - brick external reset pin for use...!!!!
-AVRDUDE_WRITE_FUSE = -U lfuse:w:0xe2:m -U hfuse:w:0x5F:m -U efuse:w:0xFF:m
+#AVRDUDE_WRITE_FUSE = -U lfuse:w:0xe2:m -U hfuse:w:0x5F:m -U efuse:w:0xFF:m
 
 # external 16Mhz
 #AVRDUDE_WRITE_FUSE = -U lfuse:w:0xff:m -U hfuse:w:0xDF:m -U efuse:w:0xFF:m

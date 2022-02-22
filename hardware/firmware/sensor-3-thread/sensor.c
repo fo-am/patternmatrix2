@@ -13,7 +13,7 @@
 // tried all sorts of nonsense to make i2c addresses writable so
 // we can build different configurations of pattern matrix, but they
 // are just to susceptable to noise - so hardcoding em for now...
-#define I2C_ADDR 0x10
+#define I2C_ADDR 0x0a
 
 uint8_t counter=0;
 

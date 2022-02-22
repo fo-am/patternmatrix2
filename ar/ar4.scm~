@@ -1,6 +1,6 @@
-(require fluxus-018/fluxus-video)
-(require fluxus-018/fluxus-artkp)
-(require fluxus-018/shapes)
+(require fluxus/fluxus-video)
+(require fluxus/fluxus-artkp)
+(require fluxus/shapes)
 
 (clear)
 (camera-clear-cache)
@@ -10,7 +10,7 @@
 
 ;; check the device id's in the console and change the first parameter of
 ;; camera-init to the id
-(define cam (camera-init 0 800 600))
+(define cam (camera-init 1 800 600))
 
 ;; init the ar system with the camera resolution and the camera parameter file
 (ar-init (camera-width cam) (camera-height cam) "data/camera_para.dat")
@@ -70,10 +70,10 @@
 ;; t is a value that goes from 0 to 1 to interpolate in a C1 continuous way across uniformly sampled data points.
 ;; when t is 0, this will return B.  When t is 1, this will return C.
 (define (cubic-hermite A B C D t)
-    (let ((a (+ (- (+ (/ (- A) 2) (/ (* 3 B) 2)) (/ (* 3 C) 2)) (/ D 2)))
-            (b (+ (- A (/ (* 5 B) 2)) (- (* 2 C) (/ D 2))))
-            (c (+ (/ (- A) 2) (/ C 2))))
-        (+ (* a t t t) (* b t t) (* c t) B)))
+  (let ((a (+ (- (+ (/ (- A) 2) (/ (* 3 B) 2)) (/ (* 3 C) 2)) (/ D 2)))
+        (b (+ (- A (/ (* 5 B) 2)) (- (* 2 C) (/ D 2))))
+        (c (+ (/ (- A) 2) (/ C 2))))
+    (+ (* a t t t) (* b t t) (* c t) B)))
 
 
 (define (extrude profile width path prim t state) 
@@ -245,7 +245,7 @@
                     (text
                         (with-state
                             (parent root)
-                            (build-text-prim (string (choose (string->list "ABCDabcd+-<>?")))))))
+                            (build-text-prim (string (choose (string->list "WXYZabcd+-<>?")))))))
                 (let ((extrude
                             (build-extrude (vector 0 0 0) (vector 0 0 0) (vector 0 0 0) (vector 0 0 0))))
           (with-primitive (extrude-prim extrude)
@@ -273,10 +273,10 @@
                     (token-gumpf token) 
                     text 
                     (cond
-                        ((string=? new-text "A") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-a-location (vadd rule-a-location rule-extrude-direction)))
-                        ((string=? new-text "B") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-b-location (vadd rule-b-location rule-extrude-direction)))
-                        ((string=? new-text "C") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-c-location (vadd rule-c-location rule-extrude-direction)))
-                        ((string=? new-text "D") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-d-location (vadd rule-d-location rule-extrude-direction)))          
+                        ((string=? new-text "W") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-a-location (vadd rule-a-location rule-extrude-direction)))
+                        ((string=? new-text "X") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-b-location (vadd rule-b-location rule-extrude-direction)))
+                        ((string=? new-text "Y") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-c-location (vadd rule-c-location rule-extrude-direction)))
+                        ((string=? new-text "Z") (extrude-new-path (token-extrude token) (vadd pos token-extrude-dir) (vadd pos token-extrude-off) rule-d-location (vadd rule-d-location rule-extrude-direction)))          
                         (else (extrude-ungrow (token-extrude token)))) 
                     0.5
                     new-text
@@ -449,9 +449,10 @@
 
 (define (add-seq-event l msg)
     (if (< (length l) 10)
-         (cons (seq-event (+ (time) (list-ref msg 0))
-            (+ (- (list-ref msg 1) 1)
-                (* (list-ref msg 2) 5))) l)
+        (cons (seq-event (+ (time) (list-ref msg 0))
+                         ;; convert xy to index
+                         (+ (- (list-ref msg 1) 1)
+                            (* (list-ref msg 2) 5))) l)
           l))
 
 (define (update-seq-events l c)
@@ -484,7 +485,7 @@
 (define c (with-state 
         (parent scene-root) 
         (translate (vector -25.5 -25.5 0)) 
-        (build-grid 5 5)))
+        (build-grid 4 4)))
 
 (define particles (build-floaty-particles))
 
@@ -497,17 +498,18 @@
         ((null? src) "")
         (else (string-append 
                 (if (< (random 100) 2)
-                    (string (choose (string->list "ABCDabcdefgh+-. ")))
+                    (string (choose (string->list "WXYZabcdefgh+-. ")))
                     (string (car src)))
                 (randomise-string (cdr src))))))
 
 (define str "?????????????????????????")
+(define str "1234123412341234")
 
 (define (drain-tick)
-    (when (osc-msg "/tick")
+  (when (osc-msg "/tick")
         (when (> (osc 1) 0)
-            (set! seq-events (add-seq-event seq-events (list (osc 0) (osc 1) (osc 2)))))
-            (display (list (osc 0) (osc 1) (osc 2)))(newline)
+              (set! seq-events (add-seq-event seq-events (list (osc 0) (osc 1) (osc 2)))))
+        (display (list (osc 0) (osc 1) (osc 2)))(newline)
         (drain-tick)))
 
 (define frame 0)
@@ -518,7 +520,7 @@
     (update-particles)
     
     (when (osc-msg "/matrix")
-        (set! c (update-grid c (string-append (osc 0) "?????"))))
+          (set! c (update-grid c (osc 0))))
     
     (drain-tick)
     
